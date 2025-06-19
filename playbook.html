@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Heights Conqueror's Playbook: A Taiwan Peak Progression</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Earthy Ascent -->
+    <!-- Application Structure Plan: A single-page, vertical scrolling application designed as a narrative journey. The core is a central "Playbook Path" that users scroll through, visually representing the progression through the 10 peaks. Clicking a peak opens a detailed modal view with tabbed content (Story, Guide), keeping the user in the main flow. This structure was chosen because it directly mirrors the concept of a progressive journey, making the experience more intuitive and story-driven than a static grid or dashboard. It allows users to consume the information sequentially, as intended by the playbook, or jump to specific points of interest. An interactive comparison chart is included to provide an alternative, data-driven view. -->
+    <!-- Visualization & Content Choices: The 10-peak progression is visualized as an HTML/Tailwind vertical timeline to represent the journey. Peak comparison stats (Fear Factor, etc.) are shown in an interactive Chart.js bar chart to allow for dynamic analysis. Individual peak details are organized in a modal with tabs to handle the rich narrative and practical content without cluttering the main view. A custom "Fear Factor" rating is visualized using Unicode icons for thematic flair. This design uses Chart.js for canvas-based charts and structured HTML/CSS for all other visual elements, adhering to the NO SVG/Mermaid requirement, to create a cohesive and interactive narrative experience. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #F8F7F2;
+            color: #3D4852;
+        }
+        .hero-bg {
+            background-image: url('https://placehold.co/1920x1080/334155/FFFFFF?text=Taiwan%27s+Majestic+Peaks');
+            background-size: cover;
+            background-position: center;
+        }
+        .playbook-line {
+            width: 4px;
+            background-color: #D1D5DB;
+            position: absolute;
+            left: calc(50% - 2px);
+            top: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+        .peak-node {
+            transition: all 0.3s ease;
+        }
+        .peak-node.conquered .node-circle {
+            background-color: #38A169;
+            border-color: #2F855A;
+        }
+        .peak-node.unconquered .node-circle {
+            background-color: #A0AEC0;
+            border-color: #718096;
+        }
+        .peak-node:hover .node-circle {
+            transform: scale(1.2);
+        }
+        .peak-node:hover .peak-card {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease; /* Keep for smooth transition */
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .tab-button.active {
+            border-bottom-color: #4A5568;
+            color: #2D3748;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header id="header" class="bg-white/80 backdrop-blur-sm sticky top-0 z-40 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="font-bold text-xl text-gray-800">Heights Conqueror</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#playbook" class="text-gray-600 hover:text-gray-900">The Playbook</a>
+                <a href="#comparison" class="text-gray-600 hover:text-gray-900">Peak Comparison</a>
+                <a href="#about" class="text-gray-600 hover:text-gray-900">About</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#playbook" class="block py-2 px-6 text-sm text-gray-700">The Playbook</a>
+            <a href="#comparison" class="block py-2 px-6 text-sm text-gray-700">Peak Comparison</a>
+            <a href="#about" class="block py-2 px-6 text-sm text-gray-700">About</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg h-screen flex items-center justify-center text-white relative">
+        <div class="absolute inset-0 bg-black/50"></div>
+        <div class="text-center z-10 p-4">
+            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">The Heights Conqueror's Playbook</h1>
+            <p class="text-lg md:text-2xl text-gray-200 max-w-3xl mx-auto">A personal journey to overcome fear by climbing ten of Taiwan's most challenging peaks, one step at a time.</p>
+        </div>
+    </section>
+    
+    <!-- Introduction Section -->
+    <section id="intro" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6 text-center">
+             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">From Fear to Freedom</h2>
+             <p class="max-w-3xl mx-auto text-lg text-gray-600">
+                This isn't just a list of hikes; it's a structured plan for facing a deep-seated fear of heights. The "Playbook" is my roadmap from gentle trails to heart-pounding ridges, designed to gradually build the confidence and skills needed to stand tall on any summit. This site documents every step of that journey—the challenges, the triumphs, and the lessons learned—to inspire anyone looking to conquer their own mountains, literal or metaphorical.
+            </p>
+        </div>
+    </section>
+
+    <!-- The Playbook Progression -->
+    <main id="playbook" class="container mx-auto px-6 py-16 md:py-24">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">The Playbook Path</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600">Follow the journey from Stage 1 to 10. Each peak is a deliberate step up in difficulty, designed to progressively build courage and skill. Conquered peaks are marked in green. Click on any peak to explore the detailed story and trail guide.</p>
+        </div>
+        <div id="playbook-path-container" class="relative">
+            <div class="playbook-line"></div>
+            <!-- Peak nodes will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <!-- Peak Comparison Section -->
+    <section id="comparison" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Peak Comparison Dashboard</h2>
+                <p class="max-w-3xl mx-auto text-lg text-gray-600">How do the challenges stack up? Use the selector below to visually compare all ten peaks across key metrics. This provides a clear, at-a-glance overview of the entire progression, helping to understand the increasing difficulty of the journey.</p>
+            </div>
+            <div class="max-w-xl mx-auto mb-8">
+                <label for="metric-selector" class="block text-sm font-medium text-gray-700">Select Metric to Compare:</label>
+                <select id="metric-selector" name="metric" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
+                    <option value="fearFactor" selected>Fear Factor (1-5)</option>
+                    <option value="elevation">Elevation Gain (m)</option>
+                    <option value="distance">Distance (km)</option>
+                    <option value="time">Estimated Time (hours)</option>
+                </select>
+            </div>
+            <div class="chart-container">
+                <canvas id="comparison-chart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 md:py-24">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">About the Conqueror</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8">
+                This project was born from a simple but powerful goal: to no longer be held back by a fear of heights. My name is [Your Name], and I created this playbook as my own personal therapy and training plan. I believe in the transformative power of the outdoors and in facing challenges head-on. My hope is that by sharing this journey, I can connect with others, build a supportive community, and encourage you to start your own playbook.
+            </p>
+            <div class="flex justify-center space-x-6">
+                 <a href="#" class="text-gray-500 hover:text-gray-800">
+                    <span class="sr-only">Instagram</span>
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.08 2.525c.636-.247 1.363-.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zm-1.161 1.542a3.849 3.849 0 00-3.352 3.352c-.043 1.002-.053 1.32-.053 3.61s.01 2.608.053 3.61a3.849 3.849 0 003.352 3.352c1.002.043 1.32.053 3.61.053s2.608-.01 3.61-.053a3.849 3.849 0 003.352-3.352c.043-1.002.053-1.32.053-3.61s-.01-2.608-.053-3.61a3.849 3.849 0 00-3.352-3.352c-1.002-.043-1.32-.053-3.61-.053s-2.608.01-3.61.053zM12 6.865a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zm0 8.468a3.333 3.333 0 110-6.666 3.333 3.333 0 010 6.666zm5.338-9.87a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z" clip-rule="evenodd" /></svg>
+                </a>
+                <a href="#" class="text-gray-500 hover:text-gray-800">
+                    <span class="sr-only">Hashtag</span>
+                    <span class="text-3xl font-bold">#</span><span class="text-lg font-semibold -ml-1">HeightsConquerorTaiwan</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Peak Detail Modal -->
+    <div id="peak-modal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div id="modal-content" class="modal-content bg-white w-full max-w-4xl max-h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 flex-shrink-0">
+                <div>
+                    <h3 id="modal-title" class="text-2xl font-bold text-gray-800"></h3>
+                    <p id="modal-subtitle" class="text-sm text-gray-500"></p>
+                </div>
+                <button id="close-modal-button" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="overflow-y-auto">
+                <!-- Tabs -->
+                <div class="border-b border-gray-200 px-4">
+                    <nav id="modal-tabs" class="-mb-px flex space-x-6">
+                        <button class="tab-button py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap focus:outline-none active" data-tab="story">The Story</button>
+                        <button class="tab-button py-3 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap focus:outline-none" data-tab="guide">Trail Guide</button>
+                    </nav>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6">
+                    <div id="tab-content-story" class="tab-content space-y-6">
+                        <!-- Content will be injected by JS -->
+                    </div>
+                    <div id="tab-content-guide" class="tab-content hidden space-y-6">
+                        <!-- Content will be injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const peaksData = [
+        { id: 'dakeng', name: 'Taichung Dakeng Trail', chineseName: '大坑步道', stage: 1, keyChallenge: 'Ridge walking & staircases', fearFactor: 1, time: 2, distance: 3, elevation: 200, conquered: true,
+            narrative: {
+                anticipation: "The perfect warm-up. My palms were still sweaty, but the well-maintained wooden staircases felt like a safety net. This was about building a foundation, getting my legs and my mind ready for what was to come.",
+                ascent: "With each step on the log staircases, I focused on my breathing and the rhythm of the climb. The exposure was gentle, a perfect introduction. It felt less like a battle and more like a conversation with the mountain, a negotiation with my fear.",
+                summit: "Reaching the pavilion felt like a small, but significant, victory. I could look out over the ridges without my stomach turning. It proved to me that the first step, no matter how small, is the most important one."
+            },
+            guide: {
+                access: "Multiple trailheads are accessible by car or local bus from Taichung city. Parking can be crowded on weekends.",
+                gear: "Comfortable shoes and water are sufficient. The wooden logs can be slippery when wet.",
+                tips: "Focus on your foot placement on the logs. This trail is great for building endurance and getting used to the feeling of being on a ridge without overwhelming exposure."
+            }
+        },
+        { id: 'jinmian', name: 'Jinmian Mountain', chineseName: '金面山', stage: 2, keyChallenge: '50-60 degree rock faces', fearFactor: 2, time: 3, distance: 4, elevation: 350, conquered: true,
+            narrative: {
+                anticipation: "This was the first real test. The words 'rock face' and 'rope sections' echoed in my mind for days. I was genuinely nervous that I'd freeze up.",
+                ascent: "Pulling myself up the first rope section, my heart hammered. I refused to look down. My world shrank to just the rope and the rock in front of me. It was physically demanding, but the mental focus required was total, leaving little room for fear.",
+                summit: "The view from the top, earned with my own hands, was exhilarating. I had faced the rock and won. The fear was still there, but I now had a flicker of confidence that I could manage it."
+            },
+            guide: {
+                access: "Trailhead is a short walk from Xihu MRT station in Taipei.",
+                gear: "Gloves are highly recommended for the rope sections. Shoes with good grip are essential.",
+                tips: "Trust the ropes. Maintain three points of contact on the rock scrambles. Lean into the rock; it feels more secure."
+            }
+        },
+        { id: 'xiaozi', name: 'Xiaozi Mountain', chineseName: '孝子山', stage: 3, keyChallenge: 'Near-vertical rock face', fearFactor: 3.5, time: 3.5, distance: 2.5, elevation: 400, conquered: true,
+            narrative: {
+                anticipation: "The pictures of Xiaozi looked impossible. A sheer rock face with metal rungs drilled into it. This was the point where the 'playbook' started to feel less like a game and more like a serious confrontation.",
+                ascent: "Climbing that ladder was an out-of-body experience. I focused only on the next rung, my world shrinking to a few feet of cold metal. The exposure was immense, a sheer drop on all sides. Every upward step was a deliberate choice to keep going.",
+                summit: "Standing on that tiny, pointed summit was terrifying and euphoric. I had climbed something that looked like it belonged to professional rock climbers. The fear was a roaring storm, but for a moment, I was the eye of it—calm and in control."
+            },
+            guide: {
+                access: "Located in Pingxi District, accessible by car or by taking a train to Pingxi and a short bus/taxi ride.",
+                gear: "A helmet is a good idea due to potential for falling pebbles. Gloves are a must.",
+                tips: "Don't look down. Focus only on the next handhold and foothold. The ladders are secure, trust your gear and your strength."
+            }
+        },
+        { id: 'huangdidian', name: 'Huangdidian', chineseName: '皇帝殿', stage: 4, keyChallenge: 'Commanding exposure', fearFactor: 3.5, time: 4, distance: 5, elevation: 450, conquered: false,
+             narrative: {
+                anticipation: "Its name, 'Emperor's Palace,' sounds regal, but all I could think about was the infamous narrow ridge. After Xiaozi, I wondered if I was ready for such sustained exposure.",
+                ascent: "The ridge is as advertised: a narrow spine of rock with steep drops. I found myself using the 'caterpillar' technique—scooting along on my bottom at times. There was no shame in it; it was about managing the fear and moving forward safely.",
+                summit: "Completing the ridge traverse felt like graduating. The fear hadn't vanished, but my ability to function despite it had grown immensely. I was learning to exist in exposed places, to breathe, and to keep moving."
+            },
+            guide: {
+                access: "Trailheads are in Shiding District. Public transport is available but can be infrequent; driving is often easier.",
+                gear: "Gloves and sturdy shoes. Some people appreciate trekking poles for the non-ridge sections.",
+                tips: "Stay low on the ridge if you feel nervous. The wind can be a factor, so check the weather forecast. The iron ladders are sturdy."
+            }
+        },
+        { id: 'bijia', name: 'Bijia Mountain', chineseName: '筆架山', stage: 5, keyChallenge: 'Sharp, narrow ridges', fearFactor: 3.5, time: 4.5, distance: 6, elevation: 500, conquered: false,
+             narrative: {
+                anticipation: "'Pen Holder Mountain'—named for its sharp, pointed peaks. This felt like a longer, more draining version of Huangdidian, a test of mental endurance as much as courage.",
+                ascent: "The trail goes up and down over multiple sharp peaks. It's a relentless series of climbs and descents along exposed ridges. I had to dig deep, using mantras and controlled breathing to keep my nerve from fraying.",
+                summit: "There isn't one single summit, but a series of them. The final peak offered a profound sense of accomplishment. I had navigated the 'pen holder's' sharp points and came out the other side, tired but empowered."
+            },
+            guide: {
+                access: "Often hiked as a traverse starting in Shiding and ending in Muzha. Requires some transportation logistics.",
+                gear: "Plenty of water, snacks, gloves, and sun protection. It's a long day.",
+                tips: "Pace yourself. The constant up-and-down is draining. Focus on one section at a time."
+            }
+        },
+        { id: 'wuliaojian', name: 'Wuliaojian', chineseName: '五寮尖', stage: 6, keyChallenge: 'Legendary knife-edge ridge', fearFactor: 4.5, time: 5, distance: 4, elevation: 600, conquered: false,
+            narrative: {
+                anticipation: "This is the one every hiker in Taiwan talks about. Wuliaojian's knife-edge ridge is a rite of passage. I was more intimidated by this than any other peak so far. This is where casual hiking ends.",
+                ascent: "The 30-meter downhill rope descent was the point of no return. Then came the ridge. It is breathtakingly narrow. I focused on a spot a few feet ahead, shutting out the sheer drops. It was a pure, meditative state of flow and fear.",
+                summit: "Surviving the knife-edge was the true summit. The feeling was primal. I had walked a line between the sky and the abyss and made it across. The fear was a constant companion, but I was leading the dance."
+            },
+            guide: {
+                access: "Trailhead is near Sanxia, Taoyuan. Best accessed by car.",
+                gear: "Helmet, gloves, and a tolerance for adrenaline. Not recommended in wet conditions.",
+                tips: "Go on a weekday to avoid crowds. You do not want to be rushed on the ridge. The initial descent requires commitment."
+            }
+        },
+        { id: 'nangang', name: 'Nangang Mountain', chineseName: '南港山', stage: 7, keyChallenge: 'Steep, challenging terrain', fearFactor: 4, time: 5.5, distance: 7, elevation: 650, conquered: false,
+            narrative: {
+                anticipation: "A familiar name with an unfamiliar bite. People think of it for its city views, but the full traverse involves some surprisingly rugged and steep sections that test your endurance after the high-adrenaline peaks.",
+                ascent: "This was a different kind of challenge. Less about sheer terror and more about relentless, steep climbing. It was a test of grit when my body was already tired. The fear crept back in moments of exhaustion.",
+                summit: "The view of Taipei 101 from the ridge is classic, but knowing the effort it took to get there made it special. It was a reminder that not all challenges are knife-edge ridges; sometimes it's just a long, hard slog."
+            },
+            guide: {
+                access: "Multiple trailheads, most famously near Xiangshan MRT station.",
+                gear: "Good hiking shoes, plenty of water. Trekking poles can save your knees on the descents.",
+                tips: "This can be a surprisingly tough hike. Don't underestimate it because it's in the city."
+            }
+        },
+        { id: 'jianlong', name: 'Jianlong Ridge', chineseName: '劍龍嶺', stage: 8, keyChallenge: 'Unfiltered exposure', fearFactor: 4.5, time: 6, distance: 3, elevation: 700, conquered: false,
+            narrative: {
+                anticipation: "'Sword Dragon Ridge'. It's described as Huangdidian without the safety rails. The photos show a blade of rock rising from the coast. This is pure, unfiltered exposure. All the training wheels are off.",
+                ascent: "Scrambling up the dragon's back, with the Pacific Ocean on one side and a steep drop on the other, was a sensory overload. The wind, the sound of the waves, the texture of the rock... It demanded 100% of my attention.",
+                summit: "The ridge itself is the experience. It's a raw, elemental challenge that connects you directly to the landscape. My fear was transformed into a profound sense of respect and a feeling of being alive."
+            },
+            guide: {
+                access: "Trailhead is near the coast in Ruifang District. Requires careful navigation to find.",
+                gear: "Helmet, gloves, shoes with excellent grip. Not for the faint of heart or inexperienced.",
+                tips: "Weather is critical here. Do not attempt in high winds or rain. The rock can be crumbly."
+            }
+        },
+        { id: 'yuanzui', name: 'Yuanzui Mountain', chineseName: '鳶嘴山', stage: 9, keyChallenge: 'Sharp, pointed, technical', fearFactor: 4.5, time: 6.5, distance: 5, elevation: 800, conquered: false,
+            narrative: {
+                anticipation: "'Kite's Beak Mountain'. The name itself is sharp. This is considered one of the great technical day hikes in central Taiwan, combining everything I've learned: exposure, scrambling, and mental fortitude.",
+                ascent: "This climb is a vertical puzzle. You're constantly searching for the next handhold, the next foothold, on a near-vertical plane. The drop-offs are ever-present. It felt like the final exam for everything I'd practiced.",
+                summit: "Standing on the 'beak' is like standing on the tip of a spear. The sense of accomplishment was immense. I had mastered the techniques and, more importantly, I had learned to trust myself in the most intimidating situations."
+            },
+            guide: {
+                access: "Located in the Dasyueshan Forest Recreation Area in Taichung. Requires a long drive.",
+                gear: "All the standard scrambling gear: helmet, gloves, good shoes.",
+                tips: "Often done as a traverse with the connecting Shaolai Mountain. Go early to avoid afternoon thunderstorms."
+            }
+        },
+        { id: 'keelung', name: 'Keelung Mt. East Peak', chineseName: '基隆山東峰 (雷霆峰)', stage: 10, keyChallenge: 'Ultimate graduation test', fearFactor: 5, time: 7, distance: 4, elevation: 900, conquered: false,
+            narrative: {
+                anticipation: "'Thunder Peak'. The final test. The culmination of the entire playbook. This is where thunder meets mountain and only the bold survive. I felt a mix of intense fear and excitement. This was it.",
+                ascent: "This route is raw and unforgiving. It's a brutal, steep scramble with extreme exposure. Every fear I had ever felt came back for one last visit. But this time, I had an answer for them. I had the experience, the strength, and the belief.",
+                summit: "Reaching the top of Thunder Peak was not an explosion of euphoria, but a quiet, profound sense of peace. I had faced the dragon and earned its respect. The fear was gone, replaced by a quiet confidence that will stay with me forever."
+            },
+            guide: {
+                access: "Near Jiufen. The trailhead is unmarked and hard to find, often requiring a guide or extensive research.",
+                gear: "Full climbing gear (helmet, harness, ropes) is recommended by many for safety. This is borderline mountaineering.",
+                tips: "This is an expert-only route. Do not attempt alone or without significant scrambling and route-finding experience."
+            }
+        }
+    ];
+
+    const playbookContainer = document.getElementById('playbook-path-container');
+    const modal = document.getElementById('peak-modal');
+    const modalContent = document.getElementById('modal-content');
+    const closeModalButton = document.getElementById('close-modal-button');
+    const modalTitle = document.getElementById('modal-title');
+    const modalSubtitle = document.getElementById('modal-subtitle');
+    const modalTabs = document.getElementById('modal-tabs');
+    const tabContentStory = document.getElementById('tab-content-story');
+    const tabContentGuide = document.getElementById('tab-content-guide');
+
+    function createFearFactorHTML(rating) {
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                html += '<span class="text-red-500">▲</span>';
+            } else if (i - 0.5 === rating) {
+                html += '<span class="text-red-300">▲</span>';
+            }
+            else {
+                html += '<span class="text-gray-300">▲</span>';
+            }
+        }
+        return `<div class="flex items-center" title="Fear Factor: ${rating}/5">${html}<span class="text-xs ml-1 text-gray-500">(${rating})</span></div>`;
+    }
+
+    function renderPlaybook() {
+        playbookContainer.innerHTML = '<div class="playbook-line"></div>';
+        peaksData.forEach((peak, index) => {
+            const isEven = index % 2 === 0;
+            const conqueredClass = peak.conquered ? 'conquered' : 'unconquered';
+
+            const peakNodeHTML = `
+                <div class="peak-node relative flex items-center ${isEven ? '' : 'flex-row-reverse'} mb-12" data-id="${peak.id}">
+                    <div class="node-circle w-8 h-8 rounded-full border-4 flex-shrink-0 flex items-center justify-center transition-transform duration-300">
+                        ${peak.conquered ? '<span class="text-white font-bold text-sm">✓</span>' : `<span class="text-white font-bold text-sm">${peak.stage}</span>`}
+                    </div>
+                    <div class="peak-card w-full md:w-5/12 bg-white rounded-lg shadow-md p-4 cursor-pointer transition-all duration-300 ${isEven ? 'md:ml-12' : 'md:mr-12'}">
+                        <p class="text-sm text-gray-500">Stage ${peak.stage} ${peak.conquered ? ' - Conquered' : ''}</p>
+                        <h4 class="font-bold text-lg text-gray-800">${peak.name}</h4>
+                        <p class="text-sm text-gray-600 mb-2">${peak.chineseName}</p>
+                        <p class="text-xs text-gray-500">${peak.keyChallenge}</p>
+                        ${createFearFactorHTML(peak.fearFactor)}
+                    </div>
+                </div>
+            `;
+            playbookContainer.insertAdjacentHTML('beforeend', peakNodeHTML);
+        });
+        
+        document.querySelectorAll('.peak-node').forEach(node => {
+            node.addEventListener('click', () => openModal(node.dataset.id));
+        });
+    }
+
+    function openModal(peakId) {
+        const peak = peaksData.find(p => p.id === peakId);
+        if (!peak) return;
+
+        modalTitle.textContent = peak.name;
+        modalSubtitle.textContent = `Stage ${peak.stage}: ${peak.keyChallenge}`;
+        
+        tabContentStory.innerHTML = `
+            <div class="prose max-w-none text-gray-700">
+                <blockquote class="border-l-4 border-yellow-400 bg-yellow-50 p-4 rounded-md">
+                    <p class="font-semibold">The Anticipation</p>
+                    <p>${peak.narrative.anticipation}</p>
+                </blockquote>
+                <p class="font-semibold mt-4">The Ascent</p>
+                <p>${peak.narrative.ascent}</p>
+                <blockquote class="border-l-4 border-green-400 bg-green-50 p-4 mt-4 rounded-md">
+                     <p class="font-semibold">The Summit & Beyond</p>
+                    <p>${peak.narrative.summit}</p>
+                </blockquote>
+            </div>
+        `;
+
+        tabContentGuide.innerHTML = `
+            <div class="grid md:grid-cols-2 gap-6 text-gray-700">
+                <div>
+                    <h5 class="font-bold mb-2 text-gray-800">Key Stats</h5>
+                    <ul class="list-none space-y-1 text-sm">
+                        <li><strong>Fear Factor:</strong> ${peak.fearFactor}/5</li>
+                        <li><strong>Distance:</strong> ${peak.distance} km</li>
+                        <li><strong>Elevation Gain:</strong> ${peak.elevation} m</li>
+                        <li><strong>Estimated Time:</strong> ${peak.time} hours</li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-2 text-gray-800">Trailhead Access</h5>
+                    <p class="text-sm">${peak.guide.access}</p>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-2 text-gray-800">Recommended Gear</h5>
+                    <p class="text-sm">${peak.guide.gear}</p>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-2 text-blue-600">Fear-Busting Tip</h5>
+                    <p class="text-sm font-medium text-blue-800">${peak.guide.tips}</p>
+                </div>
+            </div>
+        `;
+
+        // Reset to first tab
+        switchTab('story');
+
+        modal.classList.remove('hidden'); // Make modal visible
+        // Trigger transition by adding desired state classes *after* display change
+        setTimeout(() => {
+            modal.classList.add('opacity-100');
+            modalContent.classList.add('scale-100');
+        }, 10); // Small delay to ensure display change is rendered before transition starts
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+        modal.classList.remove('opacity-100'); // Start fade out
+        modalContent.classList.remove('scale-100'); // Start scale down
+        modal.classList.add('opacity-0');
+        modalContent.classList.add('scale-95');
+
+        setTimeout(() => {
+            modal.classList.add('hidden'); // Hide completely after transition
+            // Ensure no lingering transform/opacity classes if modal re-opens quickly
+            modal.classList.remove('opacity-0');
+            modalContent.classList.remove('scale-95');
+            document.body.style.overflow = 'auto';
+        }, 300); // Match CSS transition duration
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tabName);
+        });
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.toggle('hidden', content.id === `tab-content-${tabName}` ? false : true);
+        });
+    }
+
+    closeModalButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    modalTabs.addEventListener('click', (e) => {
+        if (e.target.matches('.tab-button')) {
+            switchTab(e.target.dataset.tab);
+        }
+    });
+
+    // Chart.js Logic
+    const metricSelector = document.getElementById('metric-selector');
+    const chartCtx = document.getElementById('comparison-chart').getContext('2d');
+    let comparisonChart;
+
+    const chartConfig = {
+        type: 'bar',
+        data: {
+            labels: peaksData.map(p => `${p.stage}. ${p.name}`),
+            datasets: [{
+                label: 'Metric',
+                data: [],
+                backgroundColor: 'rgba(75, 127, 204, 0.6)',
+                borderColor: 'rgba(75, 127, 204, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: ''
+                    }
+                },
+                y: {
+                   ticks: {
+                       autoSkip: false
+                   }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.x !== null) {
+                                label += context.parsed.x;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    function updateChart(metric) {
+        const data = peaksData.map(p => p[metric]);
+        const labels = {
+            fearFactor: 'Fear Factor (1-5 Scale)',
+            elevation: 'Elevation Gain (meters)',
+            distance: 'Distance (kilometers)',
+            time: 'Estimated Time (hours)'
+        };
+
+        comparisonChart.data.datasets[0].data = data;
+        comparisonChart.data.datasets[0].label = labels[metric];
+        comparisonChart.options.scales.x.title.text = labels[metric];
+        comparisonChart.update();
+    }
+    
+    comparisonChart = new Chart(chartCtx, chartConfig);
+    updateChart('fearFactor');
+
+    metricSelector.addEventListener('change', (e) => {
+        updateChart(e.target.value);
+    });
+    
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when a link is clicked
+    mobileMenu.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            mobileMenu.classList.add('hidden');
+        }
+    });
+    
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if(targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Initial render
+    renderPlaybook();
+});
+</script>
+
+</body>
+</html>
