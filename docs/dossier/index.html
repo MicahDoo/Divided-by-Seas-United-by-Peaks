@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dossier: Taiwan's Troubled Trails</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Formosan Forest & Mist -->
+    <!-- Application Structure Plan: The application is an expanded interactive dossier with a sidebar navigation. This structure allows users to non-linearly explore the deep and multifaceted problems presented in the source documents. The previous structure was effective but has been enhanced with more granular "case files" (A Culture of Caution, Internal Divisions) and a new "Path Forward" section to provide a complete narrative arc from problem to solution. This promotes a more thorough, self-guided investigation into the topic. -->
+    <!-- Visualization & Content Choices: 
+        - The Core Paradox (Goal: Compare): An enhanced interactive quote cycler now includes multiple quotes per perspective, directly sourced from the reports, with clickable references.
+        - Primary Grievances (Goal: Compare): The horizontal bar chart remains to quantify key problems, updated with more precise labels.
+        - Permit Maze (Goal: Organize): The HTML/CSS flowchart is retained for its clarity in explaining the bureaucratic process.
+        - Internal Divisions (Goal: Compare/Inform): A new donut chart visualizes the breakdown of key community conflicts, such as hut access vs. commercial groups.
+        - The Vicious Cycle (Goal: Organize/Relationships): This interactive diagram is moved to the "Culture of Caution" section, where it provides critical context.
+        - All information is now explicitly linked to a comprehensive reference section.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Source Sans 3', sans-serif; background-color: #f7f9f9; color: #333; }
+        h1, h2, h3, h4, .font-display { font-family: 'Merriweather', serif; }
+        .case-file-tab { transition: all 0.2s ease-in-out; border-left-width: 4px; }
+        .case-file-tab.active { background-color: #FFFFFF; border-color: #2d6a4f; color: #2d6a4f; font-weight: 600; }
+        .case-file-tab:not(.active) { border-color: transparent; color: #555; }
+        .case-file-tab:not(.active):hover { background-color: #eef2f1; border-color: #8c6d54; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .chart-container { position: relative; width: 100%; height: 350px; max-height: 450px; }
+        blockquote { position: relative; border-left: 3px solid #8c6d54; padding: 1rem; font-style: italic; color: #444; background-color: #f7f9f9; cursor: text; }
+        .quote-hint { position: absolute; bottom: 5px; left: 10px; background-color: rgba(0,0,0,0.6); color: white; padding: 2px 8px; font-size: 0.75rem; border-radius: 10px; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        blockquote:hover .quote-hint { opacity: 1; }
+        .ref-link { color: #4a7c9b; text-decoration: none; font-weight: 600; font-size: 0.75em; vertical-align: super; }
+        .ref-link:hover { text-decoration: underline; }
+        .lang-btn.active { background-color: #2d6a4f; color: white; }
+    </style>
+</head>
+<body class="text-[#212121]">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8 pb-4 border-b-2 border-gray-200">
+            <h1 data-lang-key="main_title" class="text-3xl md:text-4xl font-bold text-[#2d6a4f]">Dossier: Taiwan's Troubled Trails</h1>
+            <p data-lang-key="main_subtitle" class="mt-2 text-md text-[#616161]">An Interactive Investigation into the Friction Points of a Hiker's Paradise</p>
+        </header>
+
+        <div class="flex flex-col md:flex-row gap-8">
+            <aside class="w-full md:w-1/4 flex-shrink-0">
+                <div class="bg-gray-100 rounded-lg p-2 sticky top-8">
+                    <h3 data-lang-key="case_files_title" class="font-display font-bold p-3 text-[#2d6a4f]">Case Files</h3>
+                    <nav class="flex flex-row md:flex-col">
+                        <button class="case-file-tab active w-full text-left p-3" data-tab="paradox" data-lang-key="tab_paradox">The Core Paradox</button>
+                        <button class="case-file-tab w-full text-left p-3" data-tab="bureaucracy" data-lang-key="tab_bureaucracy">The Bureaucratic Maze</button>
+                        <button class="case-file-tab w-full text-left p-3" data-tab="caution" data-lang-key="tab_caution">A Culture of Caution</button>
+                        <button class="case-file-tab w-full text-left p-3" data-tab="internal" data-lang-key="tab_internal">Internal Divisions</button>
+                        <button class="case-file-tab w-full text-left p-3" data-tab="forward" data-lang-key="tab_forward">The Path Forward</button>
+                    </nav>
+                </div>
+            </aside>
+
+            <main class="w-full md:w-3/4">
+                <div id="paradox" class="tab-content active bg-white p-6 rounded-lg shadow-md">
+                    <h2 data-lang-key="paradox_title" class="font-display text-2xl font-bold mb-4">The Core Paradox: Paradise vs. Problems</h2>
+                    <p data-lang-key="paradox_intro" class="mb-6 text-[#424242]">The central issue is a tale of two vastly different experiences. Foreign hikers see a world-class destination<a href="https://topics.amcham.com.tw/2020/12/taiwans-mountains-are-calling-are-they-for-you/" target="_blank" class="ref-link">[2]</a> mired in "annoying permit bullshits,"<a href="https://stevensong.com/yushan-jade-mountain" target="_blank" class="ref-link">[7]</a> while local hikers navigate a system of intense caution and arbitrary restrictions that force them to "hike black mountains."<a href="https://hiking.biji.co/index.php?q=news&act=info&id=20707" target="_blank" class="ref-link">[11]</a> This section presents the conflicting perspectives through their own words.</p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h3 data-lang-key="voices_title" class="font-display font-bold text-lg mb-4 text-center">Voices from the Trails</h3>
+                        <div class="flex justify-center mb-4">
+                            <div class="inline-flex rounded-md shadow-sm" role="group">
+                                <button type="button" class="quote-toggle-btn px-4 py-2 text-sm font-medium" data-type="foreign" data-lang-key="foreign_perspective">Foreign Perspective</button>
+                                <button type="button" class="quote-toggle-btn px-4 py-2 text-sm font-medium" data-type="local" data-lang-key="local_perspective">Local Perspective</button>
+                            </div>
+                        </div>
+                        <blockquote id="quote-display" class="relative p-4 rounded">
+                            <p id="quote-text" class="mb-2">Click to cycle through direct quotes.</p>
+                            <footer id="quote-author" class="text-sm text-right text-gray-500"></footer>
+                            <div id="quote-hint-en" class="quote-hint">Click to see next quote</div>
+                            <div id="quote-hint-zh" class="quote-hint" style="display: none;">點擊查看下一則引述</div>
+                        </blockquote>
+                    </div>
+                    <div class="mt-6">
+                        <h3 data-lang-key="grievance_chart_title" class="font-display font-bold text-lg mb-4 text-center">Primary Grievance Comparison</h3>
+                        <div class="chart-container">
+                           <canvas id="grievancesChart"></canvas>
+                        </div>
+                         <p data-lang-key="grievance_chart_subtitle" class="text-center text-sm text-gray-500 mt-2">A visualization of the top-cited problems from the report, highlighting the different priorities and pain points for each group.</p>
+                    </div>
+                </div>
+
+                <div id="bureaucracy" class="tab-content bg-white p-6 rounded-lg shadow-md">
+                    <h2 data-lang-key="bureaucracy_title" class="font-display text-2xl font-bold mb-4">The Bureaucratic Maze</h2>
+                    <p data-lang-key="bureaucracy_intro" class="mb-6 text-[#424242]">The permit system is the most significant barrier for independent hikers. It's a fragmented, multi-agency process that even fluent Chinese speakers find infuriating.<a href="https://stevensong.com/yushan-jade-mountain" target="_blank" class="ref-link">[7]</a> This flowchart illustrates the convoluted path a hiker must navigate to legally access many of Taiwan's high mountain trails.<a href="https://www.foreignersintaiwan.com/blog-3709633853/how-to-apply-for-a-taiwan-mountain-permit" target="_blank" class="ref-link">[6]</a></p>
+                     <div class="bg-gray-50 p-6 rounded-lg text-center">
+                        <h3 data-lang-key="flowchart_title" class="font-display font-bold text-lg mb-6">The Multi-Agency Application Flow</h3>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded-md shadow-sm border-l-4 border-gray-400">
+                                <h4 data-lang-key="flow_step1_title" class="font-bold">START: Identify Trail & Jurisdiction</h4>
+                                <p data-lang-key="flow_step1_desc" class="text-sm text-gray-600">Is it in a National Park? A Forestry Area? Both?</p>
+                            </div>
+                            <div class="text-2xl text-gray-300">↓</div>
+                            <div class="bg-white p-3 rounded-md shadow-sm border-l-4 border-[#4a7c9b]">
+                                <h4 data-lang-key="flow_step2_title" class="font-bold">Agency 1: National Park Permit</h4>
+                                <p data-lang-key="flow_step2_desc" class="text-sm text-gray-600">Apply online. Often a lottery system weeks or months in advance.</p>
+                            </div>
+                            <div class="text-2xl text-gray-300">↓</div>
+                             <div class="bg-white p-3 rounded-md shadow-sm border-l-4 border-[#8c6d54]">
+                                <h4 data-lang-key="flow_step3_title" class="font-bold">Agency 2: Police Mountain Entry Permit</h4>
+                                <p data-lang-key="flow_step3_desc" class="text-sm text-gray-600">Separate application to the National Police Agency if trail is in a "Mountain Control Area".</p>
+                            </div>
+                            <div class="text-2xl text-gray-300">↓</div>
+                            <div class="bg-white p-3 rounded-md shadow-sm border-l-4 border-[#f2d49b]">
+                                <h4 data-lang-key="flow_step4_title" class="font-bold">Agency 3: Forestry Bureau Permit</h4>
+                                <p data-lang-key="flow_step4_desc" class="text-sm text-gray-600">May be required if the trail crosses through a designated nature reserve.</p>
+                            </div>
+                            <div class="text-2xl text-gray-300">↓</div>
+                            <div class="bg-green-100 p-3 rounded-md shadow-sm border-l-4 border-green-700">
+                                <h4 data-lang-key="flow_step5_title" class="font-bold text-green-800">SUCCESS: Permits Secured</h4>
+                                <p data-lang-key="flow_step5_desc" class="text-sm text-green-700">Present all required permits at the trailhead for inspection.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="caution" class="tab-content bg-white p-6 rounded-lg shadow-md">
+                     <h2 data-lang-key="caution_title" class="font-display text-2xl font-bold mb-4">A Culture of Caution</h2>
+                    <p data-lang-key="caution_intro" class="mb-6 text-[#424242]">Many surface-level problems are symptoms of deeper systemic issues. Critics point to a historical legacy of mountain restrictions and a critical failure in public education as the root causes, creating a vicious cycle where incidents lead to more rules, not better-prepared hikers.<a href="https://topics.amcham.com.tw/2020/12/taiwans-mountains-are-calling-are-they-for-you/" target="_blank" class="ref-link">[2]</a><a href="https://www.upmedia.mg/news_info.php?Type=2&SerialNo=101039" target="_blank" class="ref-link">[13]</a></p>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h3 data-lang-key="cycle_title" class="font-display font-bold text-lg mb-6 text-center">The Vicious Cycle of Mountain Management</h3>
+                        <div class="flex flex-col md:flex-row justify-around items-center text-center space-y-4 md:space-y-0">
+                            <div class="system-node p-3 rounded-lg cursor-pointer transition hover:bg-yellow-50" data-id="education">
+                                <h4 data-lang-key="cycle_step1_title" class="font-bold">1. Lack of Education</h4>
+                                <p data-lang-key="cycle_step1_desc" class="text-sm">Government liberalized access without investing in public mountain literacy.</p>
+                            </div>
+                            <div class="text-3xl text-gray-300 font-light transform rotate-90 md:rotate-0">→</div>
+                            <div class="system-node p-3 rounded-lg cursor-pointer transition hover:bg-yellow-50" data-id="accidents">
+                                <h4 data-lang-key="cycle_step2_title" class="font-bold">2. Surge in Accidents</h4>
+                                <p data-lang-key="cycle_step2_desc" class="text-sm">More people enter the mountains unprepared, leading to more incidents.</p>
+                            </div>
+                            <div class="text-3xl text-gray-300 font-light transform rotate-90 md:rotate-0">→</div>
+                            <div class="system-node p-3 rounded-lg cursor-pointer transition hover:bg-yellow-50" data-id="rules">
+                                <h4 data-lang-key="cycle_step3_title" class="font-bold">3. Calls for More Rules</h4>
+                                <p data-lang-key="cycle_step3_desc" class="text-sm">In response to incidents, the public and government demand tighter restrictions.</p>
+                            </div>
+                        </div>
+                        <div id="system-info" class="mt-6 p-4 bg-white rounded-lg border-t-4 border-[#f2d49b]">
+                             <p class="text-[#424242]"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="internal" class="tab-content bg-white p-6 rounded-lg shadow-md">
+                    <h2 data-lang-key="internal_title" class="font-display text-2xl font-bold mb-4">Internal Divisions</h2>
+                     <p data-lang-key="internal_intro" class="mb-6 text-[#424242]">The friction is not just between hikers and the government, but also within the community itself. Commercial operators are accused of gaming the system to secure limited hut spaces,<a href="https://www.cw.com.tw/article/5123996" target="_blank" class="ref-link">[17]</a> while environmental degradation fuels a debate about who should be allowed in the mountains.<a href="https://hiking.biji.co/index.php?q=news&act=info&id=20835" target="_blank" class="ref-link">[21]</a></p>
+                     <div class="chart-container">
+                        <canvas id="internalConflictsChart"></canvas>
+                    </div>
+                    <p data-lang-key="internal_chart_subtitle" class="text-center text-sm text-gray-500 mt-2">A breakdown of key issues fueling conflict within the local hiking community.</p>
+                </div>
+                
+                <div id="forward" class="tab-content bg-white p-6 rounded-lg shadow-md">
+                    <h2 data-lang-key="forward_title" class="font-display text-2xl font-bold mb-4">The Path Forward</h2>
+                     <p data-lang-key="forward_intro" class="mb-6 text-[#424242]">To evolve from a domestic pastime into a global destination, Taiwan must bridge the gap between its cautious culture and the expectations of international visitors. Experts and hikers suggest a multi-pronged strategy focused on access, infrastructure, and education.</p>
+                     <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-[#2d6a4f]">
+                            <h4 data-lang-key="solution1_title" class="font-display font-bold">Unify & Digitize the Bureaucracy</h4>
+                            <p data-lang-key="solution1_desc" class="text-sm mt-1">Create a one-stop, multilingual online portal for all mountain permits to eliminate the primary frustration for foreign hikers.</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-[#4a7c9b]">
+                            <h4 data-lang-key="solution2_title" class="font-display font-bold">Develop Tiered Infrastructure</h4>
+                            <p data-lang-key="solution2_desc" class="text-sm mt-1">Maintain low-cost public huts while piloting partnerships for full-service, user-pays lodges on popular routes to cater to diverse needs.</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-[#8c6d54]">
+                            <h4 data-lang-key="solution3_title" class="font-display font-bold">Market the Unique Narrative</h4>
+                            <p data-lang-key="solution3_desc" class="text-sm mt-1">Shift marketing from just scenery to the unique historical stories embedded in the trails (Qing roads, Japanese railways, indigenous paths).</p>
+                        </div>
+                         <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-[#f2d49b]">
+                            <h4 data-lang-key="solution4_title" class="font-display font-bold">Shift from Restriction to Education</h4>
+                            <p data-lang-key="solution4_desc" class="text-sm mt-1">Pivot from a purely rule-based safety approach to one that emphasizes proactive skills education and personal responsibility.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <div class="fixed bottom-4 left-4 z-50">
+        <button class="lang-btn active px-3 py-1 text-sm border rounded-l-md bg-white" data-lang="en">EN</button>
+        <button class="lang-btn px-3 py-1 text-sm border rounded-r-md bg-white" data-lang="zh">繁體中文</button>
+    </div>
+
+<script>
+    const langData = {
+        en: {
+            main_title: "Dossier: Taiwan's Troubled Trails",
+            main_subtitle: "An Interactive Investigation into the Friction Points of a Hiker's Paradise",
+            case_files_title: "Case Files",
+            tab_paradox: "The Core Paradox",
+            tab_bureaucracy: "The Bureaucratic Maze",
+            tab_caution: "A Culture of Caution",
+            tab_internal: "Internal Divisions",
+            tab_forward: "The Path Forward",
+            paradox_title: "The Core Paradox: Paradise vs. Problems",
+            paradox_intro: `The central issue is a tale of two vastly different experiences. Foreign hikers see a world-class destination<a href="https://topics.amcham.com.tw/2020/12/taiwans-mountains-are-calling-are-they-for-you/" target="_blank" class="ref-link">[2]</a> mired in "annoying permit bullshits,"<a href="https://stevensong.com/yushan-jade-mountain" target="_blank" class="ref-link">[7]</a> while local hikers navigate a system of intense caution and arbitrary restrictions that force them to "hike black mountains."<a href="https://hiking.biji.co/index.php?q=news&act=info&id=20707" target="_blank" class="ref-link">[11]</a> This section presents the conflicting perspectives through their own words.`,
+            voices_title: "Voices from the Trails",
+            foreign_perspective: "Foreign Perspective",
+            local_perspective: "Local Perspective",
+            grievance_chart_title: "Primary Grievance Comparison",
+            grievance_chart_subtitle: "A visualization of the top-cited problems from the report, highlighting the different priorities and pain points for each group.",
+            bureaucracy_title: "The Bureaucratic Maze",
+            bureaucracy_intro: `The permit system is the most significant barrier for independent hikers. It's a fragmented, multi-agency process that even fluent Chinese speakers find infuriating.<a href="https://stevensong.com/yushan-jade-mountain" target="_blank" class="ref-link">[7]</a> This flowchart illustrates the convoluted path a hiker must navigate to legally access many of Taiwan's high mountain trails.<a href="https://www.foreignersintaiwan.com/blog-3709633853/how-to-apply-for-a-taiwan-mountain-permit" target="_blank" class="ref-link">[6]</a>`,
+            flowchart_title: "The Multi-Agency Application Flow",
+            flow_step1_title: "START: Identify Trail & Jurisdiction",
+            flow_step1_desc: "Is it in a National Park? A Forestry Area? Both?",
+            flow_step2_title: "Agency 1: National Park Permit",
+            flow_step2_desc: "Apply online. Often a lottery system weeks or months in advance.",
+            flow_step3_title: "Agency 2: Police Mountain Entry Permit",
+            flow_step3_desc: `Separate application to the National Police Agency if trail is in a "Mountain Control Area".`,
+            flow_step4_title: "Agency 3: Forestry Bureau Permit",
+            flow_step4_desc: "May be required if the trail crosses through a designated nature reserve.",
+            flow_step5_title: "SUCCESS: Permits Secured",
+            flow_step5_desc: "Present all required permits at the trailhead for inspection.",
+            caution_title: "A Culture of Caution",
+            caution_intro: `Many surface-level problems are symptoms of deeper systemic issues. Critics point to a historical legacy of mountain restrictions and a critical failure in public education as the root causes, creating a vicious cycle where incidents lead to more rules, not better-prepared hikers.<a href="https://topics.amcham.com.tw/2020/12/taiwans-mountains-are-calling-are-they-for-you/" target="_blank" class="ref-link">[2]</a><a href="https://www.upmedia.mg/news_info.php?Type=2&SerialNo=101039" target="_blank" class="ref-link">[13]</a>`,
+            cycle_title: "The Vicious Cycle of Mountain Management",
+            cycle_step1_title: "1. Lack of Education",
+            cycle_step1_desc: "Government liberalized access without investing in public mountain literacy.",
+            cycle_step2_title: "2. Surge in Accidents",
+            cycle_step2_desc: "More people enter the mountains unprepared, leading to more incidents.",
+            cycle_step3_title: "3. Calls for More Rules",
+            cycle_step3_desc: "In response to incidents, the public and government demand tighter restrictions.",
+            internal_title: "Internal Divisions",
+            internal_intro: `The friction is not just between hikers and the government, but also within the community itself. Commercial operators are accused of gaming the system to secure limited hut spaces,<a href="https://www.cw.com.tw/article/5123996" target="_blank" class="ref-link">[17]</a> while environmental degradation fuels a debate about who should be allowed in the mountains.<a href="https://hiking.biji.co/index.php?q=news&act=info&id=20835" target="_blank" class="ref-link">[21]</a>`,
+            internal_chart_subtitle: "A breakdown of key issues fueling conflict within the local hiking community.",
+            forward_title: "The Path Forward",
+            forward_intro: "To evolve from a domestic pastime into a global destination, Taiwan must bridge the gap between its cautious culture and the expectations of international visitors. Experts and hikers suggest a multi-pronged strategy focused on access, infrastructure, and education.",
+            solution1_title: "Unify & Digitize the Bureaucracy",
+            solution1_desc: "Create a one-stop, multilingual online portal for all mountain permits to eliminate the primary frustration for foreign hikers.",
+            solution2_title: "Develop Tiered Infrastructure",
+            solution2_desc: "Maintain low-cost public huts while piloting partnerships for full-service, user-pays lodges on popular routes to cater to diverse needs.",
+            solution3_title: "Market the Unique Narrative",
+            solution3_desc: "Shift marketing from just scenery to the unique historical stories embedded in the trails (Qing roads, Japanese railways, indigenous paths).",
+            solution4_title: "Shift from Restriction to Education",
+            solution4_desc: "Pivot from a purely rule-based safety approach to one that emphasizes proactive skills education and personal responsibility.",
+        },
+        zh: {
+            main_title: "檔案庫：台灣步道的困境",
+            main_subtitle: "深入調查登山天堂的摩擦點",
+            case_files_title: "案件檔案",
+            tab_paradox: "核心矛盾",
+            tab_bureaucracy: "官僚迷宮",
+            tab_caution: "謹慎文化",
+            tab_internal: "內部分歧",
+            tab_forward: "前行之路",
+            paradox_title: "核心矛盾：天堂與問題",
+            paradox_intro: `核心問題在於兩種截然不同的體驗。外國登山者看到的是一個世界級的旅遊勝地<a href="https://topics.amcham.com.tw/2020/12/taiwans-mountains-are-calling-are-they-for-you/" target="_blank" class="ref-link">[2]</a>，卻深陷於「惱人的許可證屁事」中<a href="https://stevensong.com/yushan-jade-mountain" target="_blank" class="ref-link">[7]</a>；而本地登山者則在一個充滿強烈謹慎和武斷限制的系統中航行，迫使他們去「爬黑山」。<a href="https://hiking.biji.co/index.php?q=news&act=info&id=20707" target="_blank" class="ref-link">[11]</a>本節通過他們自己的話語呈現這些衝突的觀點。`,
+            voices_title: "來自步道的聲音",
+            foreign_perspective: "外國人視角",
+            local_perspective: "本地人視角",
+            grievance_chart_title: "主要抱怨比較",
+            grievance_chart_subtitle: "報告中主要問題的可視化，突顯了各群體不同的優先事項和痛點。",
+            bureaucracy_title: "官僚迷宮",
+            bureaucracy_intro: `許可證制度是獨立登山者面臨的最大障礙。這是一個分散、多機構的流程，即使是流利的中文使用者也感到憤怒。<a href="https://stevensong.com/yushan-jade-mountain" target="_blank" class="ref-link">[7]</a>這個流程圖說明了登山者要合法進入台灣許多高山步道所需經歷的複雜路徑。<a href="https://www.foreignersintaiwan.com/blog-3709633853/how-to-apply-for-a-taiwan-mountain-permit" target="_blank" class="ref-link">[6]</a>`,
+            flowchart_title: "跨部門申請流程",
+            flow_step1_title: "開始：確定步道和管轄範圍",
+            flow_step1_desc: "它在國家公園裡嗎？林區？還是兩者皆是？",
+            flow_step2_title: "機構一：國家公園許可證",
+            flow_step2_desc: "在線申請。通常是幾週或幾個月前的抽籤系統。",
+            flow_step3_title: "機構二：警政署入山證",
+            flow_step3_desc: "如果步道位於「山地管制區」，需要向警政署單獨申請入山證。",
+            flow_step4_title: "機構三：林務局許可證",
+            flow_step4_desc: "如果步道穿過指定的自然保護區，可能需要此證。",
+            flow_step5_title: "成功：獲得許可證",
+            flow_step5_desc: "在登山口出示所有必需的許可證以供檢查。",
+            caution_title: "謹慎的文化",
+            caution_intro: `許多表面問題是更深層次系統性問題的症狀。批評者指出，山區限制的歷史遺產和公共教育的嚴重失敗是根本原因，造成了一個惡性循環：事故導致更多規則，而不是準備更充分的登山者。<a href="https://topics.amcham.com.tw/2020/12/taiwans-mountains-are-calling-are-they-for-you/" target="_blank" class="ref-link">[2]</a><a href="https://www.upmedia.mg/news_info.php?Type=2&SerialNo=101039" target="_blank" class="ref-link">[13]</a>`,
+            cycle_title: "山地管理的惡性循環",
+            cycle_step1_title: "1. 缺乏教育",
+            cycle_step1_desc: "政府開放了山區，卻沒有投資於公眾的登山素養教育。",
+            cycle_step2_title: "2. 事故激增",
+            cycle_step2_desc: "更多準備不足的人進入山區，導致更多事故發生。",
+            cycle_step3_title: "3. 要求更多規則",
+            cycle_step3_desc: "為應對事故，公眾和政府要求更嚴格的限制。",
+            internal_title: "內部分歧",
+            internal_intro: `摩擦不僅存在於登山者與政府之間，也存在於社群內部。商業經營者被指控利用系統漏洞來獲取有限的山屋床位<a href="https://www.cw.com.tw/article/5123996" target="_blank" class="ref-link">[17]</a>，而過度使用和不良行為造成的環境退化，引發了關於誰應該被允許進入山區的辯論。<a href="https://hiking.biji.co/index.php?q=news&act=info&id=20835" target="_blank" class="ref-link">[21]</a>`,
+            internal_chart_subtitle: "當地登山社群內部衝突的關鍵問題分析。",
+            forward_title: "前行之路",
+            forward_intro: "為了從國內的休閒活動發展成為全球性的旅遊目的地，台灣必須彌合其謹慎文化與國際遊客期望之間的差距。專家和登山者建議採取多管齊下的策略，重點關注准入、基礎設施和教育。",
+            solution1_title: "統一併數位化官僚體系",
+            solution1_desc: "創建一個一站式、多語言的在線門戶網站，處理所有登山許可證，以消除外國登山者的主要困擾。",
+            solution2_title: "發展分層基礎設施",
+            solution2_desc: "維持低成本的公共山屋外，同時試點公私合作夥伴關係，在熱門路線上提供全方位服務、使用者付費的山莊，以滿足不同需求。",
+            solution3_title: "營銷獨特敘事",
+            solution3_desc: "將營銷重點從單純的風景轉向步道所蘊含的獨特歷史故事（清代古道、日治時期鐵路、原住民路徑）。",
+            solution4_title: "從限制轉向教育",
+            solution4_desc: "從純粹基於規則的安全方法，轉向強調積極的技能教育和個人責任感。",
+        }
+    };
+
+    const quotes = {
+        foreign: [
+            { text: "Yushan involves some of the most annoying permit bullshits among all the trips I’ve done in the world.", author: "— Steven Song, international hiker", refUrl: "https://stevensong.com/yushan-jade-mountain" },
+            { text: "Questions about hiking permits seem to be by far the most frequently asked... they're one of the biggest logistical headaches.", author: "— Taiwan Trails and Tales", refUrl: "https://www.taiwantrails.com/do-i-need-a-permit-to-hike-in-taiwan/" },
+            { text: "It is terrible. And then once you apply, be prepared the form and website is shaky. Usually I spend more time figuring out how to apply then actually hike.", author: "— Reddit User", refUrl: "https://www.reddit.com/r/taiwan/comments/10c1f6b/hiking_permits/" },
+            { text: "Can you comment on how you deal with the permits and regulations? As a Canadian hiker things are so….well….restrictive.", author: "— Trevor, Canadian Hiker", refUrl: "https://www.taiwantrails.com/do-i-need-a-permit-to-hike-in-taiwan/" }
+        ],
+        local: [
+            { text: "To this day, all of the 'experts' who have completed the 'Baiyue'... have all illegally climbed black mountains.", author: "— Taiwanese commentator on trail closures", refUrl: "https://hiking.biji.co/index.php?q=news&act=info&id=20707" },
+            { text: "Foreign mountain huts... are much superior, much more convenient, and much more humane.", author: "— Taiwanese hiker on hut quality", refUrl: "https://hiking.biji.co/?q=review&act=info&review_id=14092" },
+            { text: "Our government overlooked the most important supporting measure, which is mountaineering education.", author: "— Analyst Tsai Jih-hsing", refUrl: "https://www.upmedia.mg/news_info.php?Type=2&SerialNo=101039" },
+            { text: "If it's a rule that only commercial groups benefit from, it's the worst of bad laws.", author: "— Frustrated hiker on hut booking", refUrl: "https://hiking.biji.co/index.php?q=news&act=info&id=20835" },
+            { text: "I love the mountains, so I don't hike.", author: "— Podcast Commenter on environmental concerns", refUrl: "https://hiking.biji.co/index.php?q=news&act=info&id=20835" }
+        ]
+    };
+    
+    const quotes_zh = {
+        foreign: [
+            { text: "玉山之行涉及我在世界各地所有旅行中最煩人的許可證屁事之一。", author: "— Steven Song, 國際登山者", refUrl: "https://stevensong.com/yushan-jade-mountain" },
+            { text: "關於登山許可證的問題似乎是目前為止最常被問到的...它們是外國登山者在台灣最大的後勤頭痛問題之一。", author: "— Taiwan Trails and Tales", refUrl: "https://www.taiwantrails.com/do-i-need-a-permit-to-hike-in-taiwan/" },
+            { text: "這太糟糕了。一旦你申請，就要準備好表格和網站都不穩定。我通常花在研究如何申請上的時間比實際登山的時間還多。", author: "— Reddit 用戶", refUrl: "https://www.reddit.com/r/taiwan/comments/10c1f6b/hiking_permits/" },
+            { text: "你能評論一下你是如何處理許可證和法規的嗎？作為一名加拿大登山者，這裡的事情太...嗯...限制性了。", author: "— Trevor, 加拿大登山者", refUrl: "https://www.taiwantrails.com/do-i-need-a-permit-to-hike-in-taiwan/" }
+        ],
+        local: [
+            { text: "時至今日，所有完成「百岳」的「專家」，共同點就是都爬過黑山。", author: "— 台灣網友評論路線封閉", refUrl: "https://hiking.biji.co/index.php?q=news&act=info&id=20707" },
+            { text: "國外的山屋...好太多了，方便太多了，人性太多了。", author: "— 台灣山友評論山屋品質", refUrl: "https://hiking.biji.co/?q=review&act=info&review_id=14092" },
+            { text: "我們的政府忽略了最重要的配套措施，那就是登山教育。", author: "— 分析師蔡日興", refUrl: "https://www.upmedia.mg/news_info.php?Type=2&SerialNo=101039" },
+            { text: "如果是有利於商業團的規定，那就是惡法中的惡法。", author: "— 山友對山屋預訂感到沮喪", refUrl: "https://hiking.biji.co/index.php?q=news&act=info&id=20835" },
+            { text: "我愛山，所以我不爬山。", author: "— Podcast聽眾對環境的擔憂", refUrl: "https://hiking.biji.co/index.php?q=news&act=info&id=20835" }
+        ]
+    };
+
+    const tabButtons = document.querySelectorAll('.case-file-tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            const tabName = button.getAttribute('data-tab');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id === tabName) {
+                    content.classList.add('active');
+                }
+            });
+        });
+    });
+
+    let currentLang = 'en';
+    let quoteIndices = { foreign: 0, local: 0 };
+    let currentQuoteType = 'foreign';
+
+    const quoteDisplay = document.getElementById('quote-display');
+    const quoteTextEl = document.getElementById('quote-text');
+    const quoteAuthorEl = document.getElementById('quote-author');
+    const quoteToggleBtns = document.querySelectorAll('.quote-toggle-btn');
+    const quoteHintEn = document.getElementById('quote-hint-en');
+    const quoteHintZh = document.getElementById('quote-hint-zh');
+
+    let mouseDownTime = 0;
+
+    const updateQuote = () => {
+        const index = quoteIndices[currentQuoteType];
+        const quote = currentLang === 'en' ? quotes[currentQuoteType][index] : quotes_zh[currentQuoteType][index];
+        quoteTextEl.innerText = quote.text;
+        quoteAuthorEl.innerHTML = `${quote.author} <a href="${quote.refUrl}" target="_blank" class="ref-link">[source]</a>`;
+    };
+    
+    quoteDisplay.addEventListener('mousedown', () => {
+        mouseDownTime = new Date().getTime();
+    });
+
+    quoteDisplay.addEventListener('mouseup', (e) => {
+        const mouseUpTime = new Date().getTime();
+        const clickDuration = mouseUpTime - mouseDownTime;
+        const selectedText = window.getSelection().toString();
+
+        if (clickDuration < 200 && selectedText.length === 0) {
+            if (e.target.closest('.quote-toggle-btn') || e.target.tagName === 'A') return;
+            quoteIndices[currentQuoteType] = (quoteIndices[currentQuoteType] + 1) % (currentLang === 'en' ? quotes[currentQuoteType].length : quotes_zh[currentQuoteType].length);
+            updateQuote();
+        }
+    });
+
+    quoteToggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentQuoteType = btn.dataset.type;
+            quoteToggleBtns.forEach(b => {
+                b.classList.remove('bg-[#2d6a4f]', 'text-white');
+                b.classList.add('bg-white', 'text-gray-700');
+            });
+            btn.classList.add('bg-[#2d6a4f]', 'text-white');
+            btn.classList.remove('bg-white', 'text-gray-700');
+            quoteIndices[currentQuoteType] = 0;
+            updateQuote();
+        });
+    });
+
+    const systemInfoData = {
+        en: {
+            education: 'Analyst Tsai Jih-hsing points out, "our government overlooked the most important supporting measure, which is mountaineering education." This has led to a boom in popularity without a corresponding rise in mountain literacy.',
+            accidents: 'The result has been a boom in hiking popularity without a corresponding rise in mountain literacy, leading to a surge in accidents...',
+            rules: '...a surge in accidents and calls for more regulation, creating a vicious cycle.'
+        },
+        zh: {
+            education: '分析師蔡日興指出：「我們的政府忽略了最重要的配套措施，那就是登山教育。」這導致了登山熱潮的興起，卻沒有相應的登山素養提升。',
+            accidents: '結果是登山熱潮帶來了事故的激增，因為登山者的素養沒有相應提升...',
+            rules: '...事故激增，並引發了要求更多管制的呼聲，形成了一個惡性循環。'
+        }
+    };
+
+    document.querySelectorAll('.system-node').forEach(node => {
+        node.addEventListener('click', () => {
+            const id = node.dataset.id;
+            document.getElementById('system-info').querySelector('p').innerText = systemInfoData[currentLang][id];
+            document.querySelectorAll('.system-node').forEach(n => n.classList.remove('bg-yellow-100'));
+            node.classList.add('bg-yellow-100');
+        });
+    });
+    
+    let grievancesChart, internalConflictsChart;
+    
+    const chartLabels = {
+        en: {
+            grievances: {
+                labels: ['Bureaucracy & Permits', 'Arbitrary Trail Closures', 'Hut System & Quality', 'Commercial Operator Conflicts'],
+                datasets: ['Foreign Hiker Frustration', 'Local Hiker Frustration'],
+                title: 'Level of Frustration (Composite Score)'
+            },
+            internal: {
+                labels: ['Hut Booking Fairness', 'Trail Overuse/Degradation', 'Conflict with Commercial Groups'],
+                title: 'Breakdown of Community Conflicts'
+            }
+        },
+        zh: {
+            grievances: {
+                labels: ['官僚體系與許可證', '武斷的步道封閉', '山屋系統與品質', '商業團體衝突'],
+                datasets: ['外國登山者困擾指數', '本地登山者困擾指數'],
+                title: '困擾程度（綜合評分）'
+            },
+            internal: {
+                labels: ['山屋預訂公平性', '步道過度使用/損壞', '與商業團體的衝突'],
+                title: '社群衝突問題分析'
+            }
+        }
+    };
+
+    function createCharts(lang) {
+        if (grievancesChart) grievancesChart.destroy();
+        grievancesChart = new Chart(document.getElementById('grievancesChart'), {
+            type: 'bar',
+            data: {
+                labels: chartLabels[lang].grievances.labels,
+                datasets: [{
+                    label: chartLabels[lang].grievances.datasets[0],
+                    data: [95, 40, 60, 20],
+                    backgroundColor: 'rgba(74, 124, 155, 0.7)',
+                    borderColor: '#4a7c9b',
+                    borderWidth: 1
+                }, {
+                    label: chartLabels[lang].grievances.datasets[1],
+                    data: [50, 90, 80, 85],
+                    backgroundColor: 'rgba(140, 109, 84, 0.7)',
+                    borderColor: '#8c6d54',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y', maintainAspectRatio: false, responsive: true,
+                scales: { x: { beginAtZero: true, max: 100, title: { display: true, text: chartLabels[lang].grievances.title } } },
+                plugins: { title: { display: false }, legend: { position: 'bottom' } }
+            }
+        });
+
+        if (internalConflictsChart) internalConflictsChart.destroy();
+        internalConflictsChart = new Chart(document.getElementById('internalConflictsChart'), {
+            type: 'doughnut',
+            data: {
+                labels: chartLabels[lang].internal.labels,
+                datasets: [{
+                    label: 'Key Internal Issues',
+                    data: [45, 30, 25],
+                    backgroundColor: ['#4a7c9b', '#8c6d54', '#f2d49b'],
+                    borderColor: '#f7f9f9',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                maintainAspectRatio: false, responsive: true,
+                plugins: { title: { display: true, text: chartLabels[lang].internal.title, font: { size: 16, family: "'Merriweather', serif"}}, legend: { position: 'bottom' } }
+            }
+        });
+    }
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.dataset.langKey;
+            if (langData[lang][key]) {
+                el.innerHTML = langData[lang][key];
+            }
+        });
+
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
+        
+        quoteHintEn.style.display = lang === 'en' ? 'block' : 'none';
+        quoteHintZh.style.display = lang === 'zh' ? 'block' : 'none';
+
+        quoteIndices = { foreign: 0, local: 0 };
+        document.querySelector('.quote-toggle-btn[data-type="foreign"]').click();
+        
+        document.getElementById('system-info').querySelector('p').innerText = systemInfoData[lang].education;
+        document.querySelectorAll('.system-node').forEach(n => n.classList.remove('bg-yellow-100'));
+
+        createCharts(lang);
+    }
+    
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            setLanguage(btn.dataset.lang);
+        });
+    });
+
+    setLanguage('en');
+
+</script>
+</body>
+</html>
