@@ -507,8 +507,8 @@
                     image: "https://placehold.co/1200x800/81B29A/ffffff?text=Mountain+Summit",
                     actions: [
                         { text: "See how I<br>conquered<br>heights", href: "list/", arrow: "🔗" },
-                        { text: "Read about<br>hiking issues<br>in Taiwan", page: "taiwan", arrow: "↑" },
-                        { text: "See my<br>action plan", page: "plan", arrow: "↑" }
+                        { text: "Read about<br>hiking issues<br>in Taiwan", page: "taiwan", arrow: "☝️" },
+                        { text: "See my<br>action plan", page: "plan", arrow: "☝️" }
                     ]
                 },
             ];
@@ -529,8 +529,8 @@
                     
                     let actionsHTML = '';
                     if (slide.actions) {
-                        const upActions = slide.actions.filter(a => a.arrow === '↑');
-                        const externalAction = slide.actions.find(a => a.arrow === '→');
+                        const upActions = slide.actions.filter(a => a.arrow === '☝️');
+                        const externalAction = slide.actions.find(a => a.arrow === '🔗');
 
                         actionsHTML = `<div class="absolute top-24 left-8 right-8 flex justify-between items-start">
                             <a href="${externalAction.href}" target="_blank" class="action-link text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center text-center gap-1">
