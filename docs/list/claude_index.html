@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fear to Summit - A Journey of Overcoming Heights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23667eea" width="1200" height="600"/><polygon fill="%23764ba2" points="0,600 400,200 800,400 1200,100 1200,600"/><polygon fill="%234facfe" points="200,600 600,300 1000,500 1200,200 1200,600" opacity="0.5"/></svg>');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-section {
+            background: white;
+            padding: 4rem 0;
+            margin: -50px 0 0 0;
+            border-radius: 30px 30px 0 0;
+            position: relative;
+        }
+
+        .progress-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .progress-header h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 35%;
+            border-radius: 10px;
+            animation: progressAnimation 2s ease-in-out;
+        }
+
+        @keyframes progressAnimation {
+            from { width: 0%; }
+            to { width: 35%; }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s ease forwards;
+        }
+
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.4s; }
+        .stat-card:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .hikes-section {
+            padding: 4rem 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+        }
+
+        .hikes-grid {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .hike-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .hike-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .hike-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .hike-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .difficulty {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .difficulty.beginner { background: #27ae60; }
+        .difficulty.intermediate { background: #f39c12; }
+        .difficulty.advanced { background: #e74c3c; }
+        .difficulty.expert { background: #8e44ad; }
+
+        .hike-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            color: #7f8c8d;
+        }
+
+        .reflection-preview {
+            color: #555;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .fear-meter {
+            margin: 1rem 0;
+        }
+
+        .fear-label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .fear-bar {
+            height: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .fear-level {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+
+        .fear-high { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+        .fear-medium { background: linear-gradient(90deg, #f39c12, #e67e22); }
+        .fear-low { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+
+        .add-hike-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .add-hike-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover { color: #333; }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .hike-meta { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#" class="logo">Fear to Summit</a>
+            <ul class="nav-links">
+                <li><a href="#journey">Journey</a></li>
+                <li><a href="#hikes">Hikes</a></li>
+                <li><a href="#progress">Progress</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Fear to Summit</h1>
+                <p>Documenting my journey from acrophobia to alpine aspirations, one Taipei trail at a time</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="progress-section" id="progress">
+        <div class="container">
+            <div class="progress-header">
+                <h2>Journey Progress</h2>
+                <p>From trembling at viewpoints to planning Alpine expeditions</p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <p><strong>35% Complete</strong> - Currently conquering intermediate trails</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div>Hikes Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">847m</div>
+                    <div>Highest Elevation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">85%</div>
+                    <div>Fear Reduction</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">156km</div>
+                    <div>Total Distance</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hikes-section" id="hikes">
+        <div class="container">
+            <h2 class="section-title">My Hiking Journey</h2>
+            <div class="hikes-grid" id="hikesContainer">
+                <!-- Sample hikes will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <button class="add-hike-btn" onclick="openModal()">+</button>
+
+    <div id="hikeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Document New Hike</h2>
+            <form id="hikeForm">
+                <div class="form-group">
+                    <label for="hikeName">Hike Name:</label>
+                    <input type="text" id="hikeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="difficulty">Difficulty Level:</label>
+                    <select id="difficulty" required>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="elevation">Elevation (m):</label>
+                    <input type="number" id="elevation" required>
+                </div>
+                <div class="form-group">
+                    <label for="distance">Distance (km):</label>
+                    <input type="number" step="0.1" id="distance" required>
+                </div>
+                <div class="form-group">
+                    <label for="fearLevel">Fear Level (1-10, 10 being terrified):</label>
+                    <input type="range" id="fearLevel" min="1" max="10" value="5">
+                    <span id="fearLevelValue">5</span>
+                </div>
+                <div class="form-group">
+                    <label for="reflection">Personal Reflection:</label>
+                    <textarea id="reflection" placeholder="What did you learn? How did you overcome your fears? What changed in your mindset?" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="keyLearning">Key Learning:</label>
+                    <textarea id="keyLearning" placeholder="What was the main insight or breakthrough from this hike?" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Add Hike</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Fear to Summit. A journey of courage, one step at a time.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample hikes data
+        let hikes = [
+            {
+                name: "Xiangshan (Elephant Mountain)",
+                difficulty: "beginner",
+                elevation: 183,
+                distance: 2.5,
+                fearLevel: 8,
+                reflection: "My first real test. Standing at the famous viewpoint, my hands were shaking as I gripped the railing. The city spread out below felt both beautiful and terrifying. I realized my fear wasn't just about heights - it was about losing control. But I stayed for 10 minutes, breathing deeply, and something shifted.",
+                keyLearning: "Fear is just information, not a command. I can acknowledge it without being controlled by it.",
+                date: "2024-12-15"
+            },
+            {
+                name: "Maokong Hill",
+                difficulty: "beginner",
+                elevation: 299,
+                distance: 4.2,
+                fearLevel: 6,
+                reflection: "Second attempt, and already I notice the difference. The gondola ride up was still nerve-wracking, but I kept my eyes open this time. At the tea plantation viewpoint, I managed to walk closer to the edge than I ever thought possible. My breathing was more controlled.",
+                keyLearning: "Progress isn't linear, but it's measurable. Small victories compound into big changes.",
+                date: "2024-12-28"
+            },
+            {
+                name: "Jiantanshan",
+                difficulty: "intermediate",
+                elevation: 256,
+                distance: 3.8,
+                fearLevel: 5,
+                reflection: "First time I brought my camera to a high viewpoint. Taking photos forced me to focus on composition rather than my fear. I spent 30 minutes at the summit, even sitting on the rocks. The view of Keelung River wasn't just scary anymore - it was genuinely beautiful.",
+                keyLearning: "Shifting focus from internal fear to external beauty creates space for courage to grow.",
+                date: "2025-01-10"
+            }
+        ];
+
+        function renderHikes() {
+            const container = document.getElementById('hikesContainer');
+            container.innerHTML = '';
+            
+            hikes.forEach((hike, index) => {
+                const fearWidth = (11 - hike.fearLevel) * 10; // Invert scale so lower fear = more progress
+                const fearClass = hike.fearLevel <= 3 ? 'fear-low' : hike.fearLevel <= 6 ? 'fear-medium' : 'fear-high';
+                
+                const hikeCard = `
+                    <div class="hike-card">
+                        <div class="hike-header">
+                            <h3 class="hike-title">${hike.name}</h3>
+                            <span class="difficulty ${hike.difficulty}">${hike.difficulty.toUpperCase()}</span>
+                        </div>
+                        <div class="hike-meta">
+                            <span>📍 ${hike.elevation}m elevation</span>
+                            <span>🥾 ${hike.distance}km distance</span>
+                            <span>📅 ${new Date(hike.date).toLocaleDateString()}</span>
+                        </div>
+                        <div class="fear-meter">
+                            <div class="fear-label">Fear Level: ${hike.fearLevel}/10</div>
+                            <div class="fear-bar">
+                                <div class="fear-level ${fearClass}" style="width: ${fearWidth}%"></div>
+                            </div>
+                        </div>
+                        <div class="reflection-preview">
+                            "${hike.reflection}"
+                        </div>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid #ecf0f1;">
+                            <strong>Key Learning:</strong> <em>${hike.keyLearning}</em>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += hikeCard;
+            });
+        }
+
+        function openModal() {
+            document.getElementById('hikeModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('hikeModal').style.display = 'none';
+        }
+
+        // Fear level slider update
+        document.getElementById('fearLevel').oninput = function() {
+            document.getElementById('fearLevelValue').textContent = this.value;
+        }
+
+        // Form submission
+        document.getElementById('hikeForm').onsubmit = function(e) {
+            e.preventDefault();
+            
+            const newHike = {
+                name: document.getElementById('hikeName').value,
+                difficulty: document.getElementById('difficulty').value,
+                elevation: parseInt(document.getElementById('elevation').value),
+                distance: parseFloat(document.getElementById('distance').value),
+                fearLevel: parseInt(document.getElementById('fearLevel').value),
+                reflection: document.getElementById('reflection').value,
+                keyLearning: document.getElementById('keyLearning').value,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            hikes.push(newHike);
+            hikes.sort((a, b) => new Date(a.date) - new Date(b.date));
+            renderHikes();
+            updateStats();
+            closeModal();
+            
+            // Reset form
+            this.reset();
+            document.getElementById('fearLevelValue').textContent = '5';
+            
+            alert('Hike added successfully! Your journey continues...');
+        }
+
+        function updateStats() {
+            const totalHikes = hikes.length;
+            const maxElevation = Math.max(...hikes.map(h => h.elevation));
+            const totalDistance = hikes.reduce((sum, h) => sum + h.distance, 0);
+            const avgFearReduction = Math.round((10 - (hikes.reduce((sum, h) => sum + h.fearLevel, 0) / totalHikes)) * 10);
+            
+            document.querySelector('.stat-card:nth-child(1) .stat-number').textContent = totalHikes;
+            document.querySelector('.stat-card:nth-child(2) .stat-number').textContent = maxElevation + 'm';
+            document.querySelector('.stat-card:nth-child(3) .stat-number').textContent = Math.max(0, avgFearReduction) + '%';
+            document.querySelector('.stat-card:nth-child(4) .stat-number').textContent = totalDistance.toFixed(1) + 'km';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('hikeModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Initialize the page
+        renderHikes();
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
