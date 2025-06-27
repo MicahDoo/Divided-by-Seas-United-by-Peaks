@@ -25,12 +25,12 @@ const slides = [
         image: "https://placehold.co/1200x800/34495e/ffffff?text=Contemplative+View" },
     { 
         text: "That's why I started this learning journey. Just as I decided to conquer my fear of heights, I now aim to help make Taiwan a better place for hiking, for everyone.", 
-        image: "https://placehold.co/1200x800/81B29A/ffffff?text=Mountain+Summit",
-        actions: [
-            { text: "See how I<br>conquered<br>heights", href: "list/", arrow: "🔗" },
-            { text: "Read about<br>hiking issues<br>in Taiwan", page: "taiwan", arrow: "☝️" },
-            { text: "See my<br>action plan", page: "plan", arrow: "☝️" }
-        ]
+        image: "https://placehold.co/1200x800/81B29A/ffffff?text=Mountain+Summit"//,
+        // actions: [
+        //     { text: "See how I<br>conquered<br>heights", href: "list/", arrow: "🔗" },
+        //     { text: "Read about<br>hiking issues<br>in Taiwan", page: "taiwan", arrow: "☝️" },
+        //     { text: "See my<br>action plan", page: "plan", arrow: "☝️" }
+        // ]
     },
 ];
 
