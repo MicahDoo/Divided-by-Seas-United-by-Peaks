@@ -29,6 +29,7 @@ export function initSlideshow(slides, switchPage) {
         // Check if we are in "web mode" (i.e., not mobile)
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const isWebMode = window.getComputedStyle(mobileMenuButton).display === 'none';
+        isWebMode = true;
 
         // If the current slide has an 'actions' array and we're in web mode...
         if (slideData.actions) {
