@@ -431,15 +431,6 @@
                 });
             });
 
-            // Handle slideshow action buttons
-            document.addEventListener('click', (e) => {
-                const actionButton = e.target.closest('.action-link[data-page]');
-                if(actionButton && actionButton.dataset.page) {
-                    e.preventDefault();
-                    switchPage(actionButton.dataset.page);
-                }
-            });
-
             // New Effects
             const gpxPath = document.getElementById('gpx-path-progress');
             const gpxLabelsContainer = document.getElementById('gpx-labels');
@@ -541,16 +532,21 @@
                         const upActions = slide.actions.filter(a => a.arrow === '☝️');
                         const externalAction = slide.actions.find(a => a.arrow === '🔗');
 
-                        actionsHTML = `<div class="absolute top-24 left-8 right-8 flex justify-between items-start">
-                            <a href="${externalAction.href}" target="_blank" class="action-link text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center text-center gap-1">
-                                <span class="text-2xl">${externalAction.arrow}</span>
-                                <span class="max-w-[150px] leading-tight">${externalAction.text}</span>
-                            </a>
-                            <div class="flex items-start gap-8 text-center">
-                                ${upActions.map(action => `<button data-page="${action.page}" class="action-link text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1">
-                                    <span class="text-2xl">${action.arrow}</span>
-                                    <span class="max-w-[150px] leading-tight">${action.text}</span>
-                                </button>`).join('')}
+                        actionsHTML = `<div class="absolute top-0 left-0 right-0 h-full pointer-events-none">
+                            <div class="container mx-auto px-4 h-full relative">
+                                <!-- External link positioned on left -->
+                                <a href="${externalAction.href}" target="_blank" class="action-link text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center text-center gap-1 absolute top-24 left-8 pointer-events-auto">
+                                    <span class="text-2xl">${externalAction.arrow}</span>
+                                    <span class="max-w-[150px] leading-tight">${externalAction.text}</span>
+                                </a>
+                                
+                                <!-- Aligned with navbar tabs -->
+                                <div class="absolute top-24 right-4 md:right-8 flex items-start gap-8 text-center pointer-events-auto">
+                                    ${upActions.map(action => `<button data-page="${action.page}" class="action-link text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1">
+                                        <span class="text-2xl">${action.arrow}</span>
+                                        <span class="max-w-[150px] leading-tight">${action.text}</span>
+                                    </button>`).join('')}
+                                </div>
                             </div>
                         </div>`;
                     }
