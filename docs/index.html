@@ -534,24 +534,24 @@
 
                         actionsHTML = `<div class="absolute top-0 left-0 right-0 h-full pointer-events-none">
                             <div class="container mx-auto px-4">
-                                <!-- Mirror navbar structure for positioning -->
-                                <nav class="flex justify-between items-center py-4 invisible">
-                                    <div class="text-xl md:text-2xl font-bold">🏔️ Micah's Mountain Quest</div>
+                                <!-- Mirror navbar structure for positioning ONLY -->
+                                <nav class="flex justify-between items-center py-4">
+                                    <div class="text-xl md:text-2xl font-bold opacity-0">🏔️ Micah's Mountain Quest</div>
                                     <div class="hidden md:flex items-center space-x-8">
                                         <div class="relative">
-                                            <div class="invisible font-medium border-b-2 border-transparent">Journey</div>
+                                            <div class="opacity-0 font-medium border-b-2 border-transparent">Journey</div>
                                         </div>
                                         <div class="relative">
-                                            <div class="invisible font-medium border-b-2 border-transparent">Taiwan's Issues</div>
-                                            <!-- Action button centered on tab -->
+                                            <div class="opacity-0 font-medium border-b-2 border-transparent">Taiwan's Issues</div>
+                                            <!-- Action button centered on tab - VISIBLE -->
                                             <button data-page="taiwan" class="action-link absolute top-20 left-1/2 transform -translate-x-1/2 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto">
                                                 <span class="text-2xl">☝️</span>
                                                 <span class="max-w-[150px] leading-tight text-center">Read about<br>hiking issues<br>in Taiwan</span>
                                             </button>
                                         </div>
                                         <div class="relative">
-                                            <div class="invisible font-medium border-b-2 border-transparent">Plan</div>
-                                            <!-- Action button centered on tab -->
+                                            <div class="opacity-0 font-medium border-b-2 border-transparent">Plan</div>
+                                            <!-- Action button centered on tab - VISIBLE -->
                                             <button data-page="plan" class="action-link absolute top-20 left-1/2 transform -translate-x-1/2 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto">
                                                 <span class="text-2xl">☝️</span>
                                                 <span class="max-w-[150px] leading-tight text-center">See my<br>action plan</span>
