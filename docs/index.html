@@ -444,7 +444,7 @@
                         window.location.href = './list/'; // Navigate to the list page
                         break;
                     case 'dossier':
-                        switchPage('dossier'); // Navigate to the dossier page
+                        switchPage('issues'); // Navigate to the dossier page
                         break;
                     case 'plan':
                         switchPage('plan'); // Use existing function to switch to the plan view
@@ -510,7 +510,7 @@
                     planPage.classList.remove('hidden');
                     progressBarWrapper.classList.remove('hidden');
                     document.body.classList.add('plan-active');
-                } else if (page === 'taiwan') {
+                } else if (page === 'dossier') {
                     journeyPage.classList.add('hidden');
                     taiwanPage.classList.remove('hidden');
                     planPage.classList.add('hidden');
