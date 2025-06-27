@@ -510,7 +510,7 @@
                     planPage.classList.remove('hidden');
                     progressBarWrapper.classList.remove('hidden');
                     document.body.classList.add('plan-active');
-                } else if (page === 'dossier') {
+                } else if (page === 'taiwan') {
                     journeyPage.classList.add('hidden');
                     taiwanPage.classList.remove('hidden');
                     planPage.classList.add('hidden');
@@ -523,6 +523,20 @@
                     progressBarWrapper.classList.add('hidden');
                     document.body.classList.remove('plan-active');
                 }
+
+                // --- ADD THIS LOGIC ---
+                // This logic handles the visibility of the action buttons
+                if (page === 'journey') {
+                    // If we're on the journey page, tell the slideshow to update its buttons
+                    if (window.slideshow) {
+                        window.slideshow.updateUI();
+                    }
+                } else {
+                    // If we're on any other page, hide the action buttons
+                    document.querySelectorAll('.action-button').forEach(btn => btn.classList.add('hidden'));
+                }
+                // --- END ---
+
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 const activeTab = document.querySelector(`.nav-tab[data-page="${page}"]`);
                 if(activeTab) activeTab.classList.add('active');
@@ -535,7 +549,6 @@
                 
                 window.scrollTo(0,0);
             }
-
             navTabs.forEach(tab => {
                 tab.addEventListener('click', (e) => {
                     e.preventDefault();
