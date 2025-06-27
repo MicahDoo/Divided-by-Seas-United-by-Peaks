@@ -431,6 +431,15 @@
                 });
             });
 
+            // Handle slideshow action buttons
+            document.addEventListener('click', (e) => {
+                const actionButton = e.target.closest('.action-link[data-page]');
+                if(actionButton && actionButton.dataset.page) {
+                    e.preventDefault();
+                    switchPage(actionButton.dataset.page);
+                }
+            });
+
             // New Effects
             const gpxPath = document.getElementById('gpx-path-progress');
             const gpxLabelsContainer = document.getElementById('gpx-labels');
