@@ -419,6 +419,28 @@
             function updateCalculator() { Object.assign(budgetInputs, Object.fromEntries(Object.entries(budgetData[budgetPathway.value]).map(([k,v]) => [k, (budgetInputs[k].value=v, budgetInputs[k])]))); calculateTotal(); }
             budgetPathway.addEventListener('change', updateCalculator);
             Object.values(budgetInputs).forEach(input => input.addEventListener('input', calculateTotal));
+
+            const header = document.querySelector('header');
+            header.addEventListener('click', (e) => {
+                // Find the closest parent that is an action button
+                const actionButton = e.target.closest('.action-button');
+                
+                // If the click was not on an action button, do nothing
+                if (!actionButton) return;
+
+                // Handle the click based on the button's ID
+                switch (actionButton.id) {
+                    case 'list':
+                        window.location.href = './list/'; // Navigate to the list page
+                        break;
+                    case 'dossier':
+                        window.location.href = './dossier/'; // Navigate to the dossier page
+                        break;
+                    case 'plan':
+                        switchPage('plan'); // Use existing function to switch to the plan view
+                        break;
+                }
+            });
             
             // Page Navigation Logic
             const navTabs = document.querySelectorAll('.nav-tab, #mobile-menu button, #main-logo');
