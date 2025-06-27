@@ -512,15 +512,18 @@
                 });
                 document.body.classList.add(pageName + "-active");
 
-                // This logic handles the visibility of the action buttons
-                if (pageName != 'journey') {
-                    // If we're on the journey page, tell the slideshow to update its buttons
-                    if (window.slideshow) {
-                        window.slideshow.updateUI();
+                // Show or hide action buttons depending on current page
+                document.querySelectorAll('.action-button').forEach(btn => {
+                    if (pageName === 'journey') {
+                        btn.classList.add('hidden');
+                    } else {
+                        btn.classList.remove('hidden');
                     }
-                } else {
-                    // If we're on any other page, hide the action buttons
-                    document.querySelectorAll('.action-button').forEach(btn => btn.classList.add('hidden'));
+                });
+                
+                // Optionally update slideshow buttons if relevant
+                if (window.slideshow && pageName === 'journey') {
+                    window.slideshow.updateUI();
                 }
 
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
