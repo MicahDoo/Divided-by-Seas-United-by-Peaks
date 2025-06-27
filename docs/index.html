@@ -275,6 +275,13 @@
 
         // 2. All of your original JavaScript code now lives inside this single DOMContentLoaded listener.
         document.addEventListener('DOMContentLoaded', () => {
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
             
             const courses = [
                 { id: 1, school: 'Compagnie des Guides', name: 'Beginner Course (3-Day)', location: 'Chamonix, France', region: 'europe', duration: 3, price: 630, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, regular sports activity.', curriculum: ['Rock climbing basics', 'Knot tying', 'Belaying', 'Rappelling', 'Glacier travel', 'Crampon/Ice axe use'], inclusions: ['Guide fees', 'Group safety gear'], exclusions: ['Accommodation', 'Lifts', 'Food', 'Personal gear', 'Insurance'] },
