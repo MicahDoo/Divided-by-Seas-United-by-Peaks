@@ -516,6 +516,7 @@
                 document.querySelectorAll('.action-button').forEach(btn => {
                     if (pageName === 'journey') {
                         btn.classList.remove('hidden');
+                        window.slideshow.updateUI();
                     } else {
                         btn.classList.add('hidden');
                     }
