@@ -568,6 +568,24 @@
                     switchPage(actionButton.dataset.page);
                 }
             });
+
+            function syncActionButtonsWithNavbar() {
+                const taiwanTab = document.querySelector('.nav-tab[data-page="taiwan"]');
+                const planTab = document.querySelector('.nav-tab[data-page="plan"]');
+                const taiwanButton = document.querySelector('.action-link[data-page="taiwan"]');
+                const planButton = document.querySelector('.action-link[data-page="plan"]');
+                
+                if (taiwanTab && taiwanButton) {
+                    const rect = taiwanTab.getBoundingClientRect();
+                    taiwanButton.style.left = `${rect.left}px`;
+                }
+                
+                if (planTab && planButton) {
+                    const rect = planTab.getBoundingClientRect();
+                    planButton.style.left = `${rect.left}px`;
+                }
+            }
+            window.addEventListener('resize', syncActionButtonsWithNavbar);
             
             function updateSlideButtons(){
                 prevButton.classList.toggle('hidden', currentSlide === 0);
