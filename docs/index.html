@@ -525,11 +525,11 @@
                 }
 
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                const activeTab = document.querySelector(`.nav-tab[data-page="${page}"]`);
+                const activeTab = document.querySelector(`.nav-tab[data-page="${pageName}"]`);
                 if(activeTab) activeTab.classList.add('active');
                 document.querySelectorAll('#mobile-menu button').forEach(button => {
                     button.classList.remove('mobile-tab-active');
-                    if (button.dataset.page === page) {
+                    if (button.dataset.page === pageName) {
                         button.classList.add('mobile-tab-active');
                     }
                 });
