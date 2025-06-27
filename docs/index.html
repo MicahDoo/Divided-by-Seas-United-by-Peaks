@@ -138,12 +138,30 @@
         <div class="mx-auto px-4"><nav class="flex justify-between items-center py-4">
             <a href="#" id="main-logo" class="text-xl md:text-2xl font-bold text-header-dark">🏔️ Micah's Mountain Quest</a>
             <div class="hidden md:flex items-center space-x-8">
-                <button data-page="journey" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Journey</button>
-                <button data-page="taiwan" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Taiwan's Issues</button>
-                <button data-page="plan" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Plan</button>
+                <div class="relative">
+                    <button data-page="journey" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Journey</button>
+                    <button id="list" type="pointer" class="action-button hidden action-link absolute top-16 left-1/2 transform -translate-x-1/2 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto">
+                        <span class="text-2xl">🔗</span>
+                        <span class="max-w-[150px] leading-tight text-center">See my<br>progression list</span>
+                    </button>
+                </div>
+                <div class="relative">
+                    <button data-page="taiwan" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Taiwan's Issues</button>
+                    <button id="issues" type="pointer" class="action-button hidden action-link absolute top-16 left-1/2 transform -translate-x-1/2 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto">
+                        <span class="text-2xl">☝️</span>
+                        <span class="max-w-[150px] leading-tight text-center">Read the<br>dossier</span>
+                    </button>
+                </div>
+                <div class="relative">
+                    <button data-page="plan" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Plan</button>
+                    <button id="plan" type="pointer" class="action-button hidden action-link absolute top-16 left-1/2 transform -translate-x-1/2 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto">
+                        <span class="text-2xl">☝️</span>
+                        <span class="max-w-[150px] leading-tight text-center">See the<br>interactive plan</span>
+                    </button>
+                </div>
             </div>
             <button id="mobile-menu-button" class="md:hidden text-header-dark text-2xl">☰</button></nav></div>
-        <div id="mobile-menu" class="hidden md:hidden absolute top-full right-4 mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-md shadow-lg py-1">
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full right-4 mt-2 w-48 bg-neutral-100/90 backdrop-blur-lg rounded-md shadow-lg py-1">
             <button data-page="journey" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Journey</button>
             <button data-page="taiwan" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Taiwan's Issues</button>
             <button data-page="plan" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Plan</button>
