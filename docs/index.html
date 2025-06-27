@@ -273,121 +273,32 @@
     <div id="toast-notification" class="toast-notification fixed top-5 right-5 bg-terracotta text-white py-2 px-5 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50"></div>
     <div id="compare-tray" class="compare-tray fixed bottom-0 left-0 right-0 bg-wood-panel text-header-dark p-4 shadow-2xl"><div class="container mx-auto flex justify-between items-center"><div><h4 class="font-bold text-lg">Compare Courses</h4><div id="compare-items" class="flex items-center space-x-2 mt-1"></div></div><div class="flex items-center space-x-4"><button id="compare-now-btn" class="accent-dirt text-white font-bold py-2 px-6 rounded-md hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed">Compare</button><button id="clear-compare-btn" class="text-sm text-slate-600 hover:text-header-dark">Clear</button></div></div></div>
 
-    <script>
-        const courses = [
-            { id: 1, school: 'Compagnie des Guides', name: 'Beginner Course (3-Day)', location: 'Chamonix, France', region: 'europe', duration: 3, price: 630, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, regular sports activity.', curriculum: ['Rock climbing basics', 'Knot tying', 'Belaying', 'Rappelling', 'Glacier travel', 'Crampon/Ice axe use'], inclusions: ['Guide fees', 'Group safety gear'], exclusions: ['Accommodation', 'Lifts', 'Food', 'Personal gear', 'Insurance'] },
-            { id: 2, school: 'Compagnie des Guides', name: 'Beginner Course (5-Day)', location: 'Chamonix, France', region: 'europe', duration: 5, price: 1145, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, comfortable with multi-hour hikes.', curriculum: ['All 3-day skills', 'Crevasse rescue basics', 'Multi-pitch climbing intro', 'Night in a mountain hut'], inclusions: ['Guide fees', 'Group safety gear', 'Hut half-board'], exclusions: ['Valley accommodation', 'Lifts', 'Food (lunches)', 'Personal gear', 'Insurance'] },
-            { id: 6, school: 'Zermatters', name: 'Basic Course: Ice & Rock', location: 'Zermatt, Switzerland', region: 'europe', duration: 2, price: 500, currency: 'EUR', style: 'summit-goal', ratio: '1:6', fitness: 'Able to hike 4-5 hours at a steady pace.', curriculum: ['Glacier travel', 'Crampon/Ice axe use', 'Self-arrest', 'Basic rope work', 'Ascent of Breithorn (4164m)'], inclusions: ['Guide fees', 'Group gear', 'Lift pass'], exclusions: ['Accommodation', 'Food', 'Personal gear'] },
-            { id: 7, school: 'Mountain Guides Italy', name: 'BASIC Mountaineering', location: 'Dolomites, Italy', region: 'europe', duration: 3, price: 900, currency: 'EUR', style: 'rock-focus', ratio: '1:2', fitness: 'Very good fitness, comfortable on exposed terrain.', curriculum: ['Customizable', 'Rock climbing skills', 'Multi-pitch routes', 'Via ferrata techniques'], inclusions: ['Guide fees', 'Group gear'], exclusions: ['All accommodation', 'Food', 'Lifts', 'Client/guide expenses'] },
-            { id: 9, school: 'Colorado Mtn Club', name: 'Boulder Mtn School', location: 'Boulder, CO, USA', region: 'usa', duration: 90, price: 560, currency: 'EUR', style: 'budget-club', ratio: 'Varies', fitness: 'Must complete conditioning hikes (e.g., Green Mountain).', curriculum: ['Comprehensive curriculum over a season', 'Rock, Snow, and High-Altitude sections', 'Navigation', 'First aid'], inclusions: ['Instruction'], exclusions: ['All gear', 'Transportation', 'Park fees', 'CMC Membership'] },
-            { id: 10, school: 'Colorado Mtn School', name: 'Intro to Mountaineering', location: 'Estes Park, CO, USA', region: 'usa', duration: 2, price: 605, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Moderate fitness, able to hike for 5-8 hours with a pack.', curriculum: ['Self-arrest', 'Ice axe/crampon use', 'Glacier travel basics', 'Rope team travel', 'Basic knots'], inclusions: ['Guide fees', 'Group gear'], exclusions: ['Accommodation', 'Food', 'Personal gear', 'Park entry'] },
-            { id: 12, school: 'American Alpine Inst.', name: 'Alpinism 1', location: 'Mt. Baker, WA, USA', region: 'usa', duration: 6, price: 1700, currency: 'EUR', style: 'glacier-skills', ratio: '1:5', fitness: 'Excellent fitness, able to carry 40-50 lbs pack for many hours.', curriculum: ['Expedition camping', 'Glacier travel', 'Crevasse rescue', 'Ice climbing basics', 'Navigation', 'Snow anchors'], inclusions: ['Guide fees', 'Group gear', 'Food on mountain'], exclusions: ['Transportation', 'Hotel nights', 'Personal gear'] },
-            { id: 13, school: 'Mountain Madness', name: 'Alpine Climbing Course', location: 'North Cascades, WA', region: 'usa', duration: 8, price: 1860, currency: 'EUR', style: 'glacier-skills', ratio: '1:4', fitness: 'Excellent fitness, ability to carry a heavy pack is crucial.', curriculum: ['All AAI skills plus', 'Advanced crevasse rescue', 'Multi-pitch rock/alpine ice climbing'], inclusions: ['Guide fees', 'Group gear', 'All food on mountain'], exclusions: ['Transportation', 'Hotels', 'Personal gear'] },
-            { id: 15, school: 'Japan Outdoor Inst.', name: 'Mountaineering LVL 1', location: 'Yatsugatake, Japan', region: 'japan', duration: 2, price: 375, currency: 'EUR', style: 'all-round', ratio: '1:5', fitness: 'Good hiking fitness, comfortable with 6-8 hour days.', curriculum: ['Map/compass navigation', 'Basic rope work', 'Mountain weather', 'Trip planning', 'Scrambling on rock'], inclusions: ['Instruction', 'Group gear'], exclusions: ['Lodge fees (~€75/night)', 'Food', 'Transportation', 'Insurance'] }
-        ];
+    <script type="module">
+        // 1. IMPORT your new modules at the top.
+        // The browser will fetch these files before running the rest of the script.
+        import slidesData from './assets/js/slideshow-data.js';
+        import { initSlideshow } from './assets/js/slideshow.js';
+
+        // 2. PASTE all the rest of your original JavaScript code inside this single DOMContentLoaded listener.
 
         document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Course Finder Data ---
+            const courses = [
+                { id: 1, school: 'Compagnie des Guides', name: 'Beginner Course (3-Day)', location: 'Chamonix, France', region: 'europe', duration: 3, price: 630, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, regular sports activity.', curriculum: ['Rock climbing basics', 'Knot tying', 'Belaying', 'Rappelling', 'Glacier travel', 'Crampon/Ice axe use'], inclusions: ['Guide fees', 'Group safety gear'], exclusions: ['Accommodation', 'Lifts', 'Food', 'Personal gear', 'Insurance'] },
+                { id: 2, school: 'Compagnie des Guides', name: 'Beginner Course (5-Day)', location: 'Chamonix, France', region: 'europe', duration: 5, price: 1145, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, comfortable with multi-hour hikes.', curriculum: ['All 3-day skills', 'Crevasse rescue basics', 'Multi-pitch climbing intro', 'Night in a mountain hut'], inclusions: ['Guide fees', 'Group safety gear', 'Hut half-board'], exclusions: ['Valley accommodation', 'Lifts', 'Food (lunches)', 'Personal gear', 'Insurance'] },
+                { id: 6, school: 'Zermatters', name: 'Basic Course: Ice & Rock', location: 'Zermatt, Switzerland', region: 'europe', duration: 2, price: 500, currency: 'EUR', style: 'summit-goal', ratio: '1:6', fitness: 'Able to hike 4-5 hours at a steady pace.', curriculum: ['Glacier travel', 'Crampon/Ice axe use', 'Self-arrest', 'Basic rope work', 'Ascent of Breithorn (4164m)'], inclusions: ['Guide fees', 'Group gear', 'Lift pass'], exclusions: ['Accommodation', 'Food', 'Personal gear'] },
+                { id: 7, school: 'Mountain Guides Italy', name: 'BASIC Mountaineering', location: 'Dolomites, Italy', region: 'europe', duration: 3, price: 900, currency: 'EUR', style: 'rock-focus', ratio: '1:2', fitness: 'Very good fitness, comfortable on exposed terrain.', curriculum: ['Customizable', 'Rock climbing skills', 'Multi-pitch routes', 'Via ferrata techniques'], inclusions: ['Guide fees', 'Group gear'], exclusions: ['All accommodation', 'Food', 'Lifts', 'Client/guide expenses'] },
+                { id: 9, school: 'Colorado Mtn Club', name: 'Boulder Mtn School', location: 'Boulder, CO, USA', region: 'usa', duration: 90, price: 560, currency: 'EUR', style: 'budget-club', ratio: 'Varies', fitness: 'Must complete conditioning hikes (e.g., Green Mountain).', curriculum: ['Comprehensive curriculum over a season', 'Rock, Snow, and High-Altitude sections', 'Navigation', 'First aid'], inclusions: ['Instruction'], exclusions: ['All gear', 'Transportation', 'Park fees', 'CMC Membership'] },
+                { id: 10, school: 'Colorado Mtn School', name: 'Intro to Mountaineering', location: 'Estes Park, CO, USA', region: 'usa', duration: 2, price: 605, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Moderate fitness, able to hike for 5-8 hours with a pack.', curriculum: ['Self-arrest', 'Ice axe/crampon use', 'Glacier travel basics', 'Rope team travel', 'Basic knots'], inclusions: ['Guide fees', 'Group gear'], exclusions: ['Accommodation', 'Food', 'Personal gear', 'Park entry'] },
+                { id: 12, school: 'American Alpine Inst.', name: 'Alpinism 1', location: 'Mt. Baker, WA, USA', region: 'usa', duration: 6, price: 1700, currency: 'EUR', style: 'glacier-skills', ratio: '1:5', fitness: 'Excellent fitness, able to carry 40-50 lbs pack for many hours.', curriculum: ['Expedition camping', 'Glacier travel', 'Crevasse rescue', 'Ice climbing basics', 'Navigation', 'Snow anchors'], inclusions: ['Guide fees', 'Group gear', 'Food on mountain'], exclusions: ['Transportation', 'Hotel nights', 'Personal gear'] },
+                { id: 13, school: 'Mountain Madness', name: 'Alpine Climbing Course', location: 'North Cascades, WA', region: 'usa', duration: 8, price: 1860, currency: 'EUR', style: 'glacier-skills', ratio: '1:4', fitness: 'Excellent fitness, ability to carry a heavy pack is crucial.', curriculum: ['All AAI skills plus', 'Advanced crevasse rescue', 'Multi-pitch rock/alpine ice climbing'], inclusions: ['Guide fees', 'Group gear', 'All food on mountain'], exclusions: ['Transportation', 'Hotels', 'Personal gear'] },
+                { id: 15, school: 'Japan Outdoor Inst.', name: 'Mountaineering LVL 1', location: 'Yatsugatake, Japan', region: 'japan', duration: 2, price: 375, currency: 'EUR', style: 'all-round', ratio: '1:5', fitness: 'Good hiking fitness, comfortable with 6-8 hour days.', curriculum: ['Map/compass navigation', 'Basic rope work', 'Mountain weather', 'Trip planning', 'Scrambling on rock'], inclusions: ['Instruction', 'Group gear'], exclusions: ['Lodge fees (~€75/night)', 'Food', 'Transportation', 'Insurance'] }
+            ];
+
             const courseListEl = document.getElementById('course-list');
-            const noResultsEl = document.getElementById('no-results');
-            const filters = Array.from(document.querySelectorAll('#courses select'));
-            let comparisonList = [];
-
-            function renderCourses() {
-                const values = filters.map(f => f.value);
-                const filtered = courses.filter(c =>(values[0] === 'all' || c.region === values[0]) &&(values[1] === 'all' || c.style === values[1]) &&(values[2] === 'all' || (values[2] === '1-3' && c.duration <= 3) || (values[2] === '4-6' && c.duration >= 4 && c.duration <= 6) || (values[2] === '7+' && c.duration >= 7)) &&(values[3] === 'all' || c.price <= parseInt(values[3])));
-                courseListEl.innerHTML = '';
-                noResultsEl.classList.toggle('hidden', filtered.length > 0);
-                filtered.forEach(course => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white border border-slate-200 rounded-lg shadow-md p-6 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300';
-                    const isAdded = comparisonList.includes(course.id);
-                    const isFull = !isAdded && comparisonList.length >= 3;
-                    card.innerHTML = `<div><h3 class="text-xl font-bold text-navy-dark">${course.name}</h3><p class="text-slate-600 text-sm font-medium">${course.school}</p><p class="text-slate-500 text-sm mt-1">${course.location}</p></div><div class="mt-4 flex-grow"><span class="inline-block bg-navy-dark/10 text-navy-dark text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${course.duration > 89 ? 'Season' : course.duration + ' Days'}</span><span class="inline-block bg-dirt/10 text-dirt text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${course.style.replace('-', ' ')}</span></div><div class="mt-4 pt-4 border-t border-slate-200 flex justify-between items-center"><span class="text-2xl font-bold text-navy-dark">€${course.price.toLocaleString()}</span><div class="flex space-x-2"><button class="btn-details text-sm text-navy-dark font-semibold hover:text-dirt" data-id="${course.id}">Details</button><button class="btn-compare text-sm text-white font-semibold py-1 px-3 rounded transition-colors ${isAdded ? 'added' : isFull ? 'full' : 'accent-dirt hover:bg-opacity-90'}" data-id="${course.id}" ${isFull ? 'disabled' : ''}>${isAdded ? '✓ Added' : 'Compare'}</button></div></div>`;
-                    courseListEl.appendChild(card);
-                });
-            }
-
-            const detailsModal = document.getElementById('details-modal');
-            const compareModal = document.getElementById('compare-modal');
-            function openDetailsModal(courseId) {
-                const course = courses.find(c => c.id === courseId);
-                if (!course) return;
-                detailsModal.innerHTML = `<div class="modal-content bg-wood-panel rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto transform scale-95 p-6 text-header-dark"><div class="flex justify-between items-start mb-4"><h2 class="text-2xl md:text-3xl font-bold">${course.name}</h2><button class="btn-close-modal text-3xl hover:text-white">&times;</button></div><div class="flex border-b border-yellow-800/20 mb-4"><button class="modal-tab p-4 font-semibold active" data-tab="overview">Overview</button><button class="modal-tab p-4 font-semibold" data-tab="curriculum">Curriculum</button><button class="modal-tab p-4 font-semibold" data-tab="reviews">Reviews</button><button class="modal-tab p-4 font-semibold" data-tab="prereqs">Prerequisites</button></div><div id="modal-tab-content"></div></div>`;
-                
-                const modalTabContent = detailsModal.querySelector('#modal-tab-content');
-
-                const tabContents = {
-                    overview: `<div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center my-6"><div class="bg-stone/50 p-3 rounded-lg shadow-sm"><div class="text-xs text-header-dark/80">Price</div><div class="font-bold text-lg text-header-dark">€${course.price}</div></div><div class="bg-stone/50 p-3 rounded-lg shadow-sm"><div class="text-xs text-header-dark/80">Duration</div><div class="font-bold text-lg text-header-dark">${course.duration > 89 ? 'Season' : course.duration + ' Days'}</div></div><div class="bg-stone/50 p-3 rounded-lg shadow-sm"><div class="text-xs text-header-dark/80">Ratio</div><div class="font-bold text-lg text-header-dark">${course.ratio}</div></div><div class="bg-stone/50 p-3 rounded-lg shadow-sm"><div class="text-xs text-header-dark/80">Style</div><div class="font-bold text-lg text-header-dark capitalize">${course.style.replace('-', ' ')}</div></div></div><div class="grid md:grid-cols-2 gap-6 mt-6"><div><h3 class="text-xl font-bold border-b border-yellow-800/20 pb-2 mb-3">✅ What's Included</h3><ul class="list-disc list-inside space-y-1">${course.inclusions.map(item => `<li>${item}</li>`).join('')}</ul></div><div><h3 class="text-xl font-bold border-b border-yellow-800/20 pb-2 mb-3">❌ What You Provide</h3><ul class="list-disc list-inside space-y-1">${course.exclusions.map(item => `<li>${item}</li>`).join('')}</ul></div></div>`,
-                    curriculum: `<div class="prose max-w-none prose-headings:text-header-dark prose-li:text-header-dark/90"><h3 class="text-xl font-bold mb-3">Detailed Itinerary</h3><ul class="list-disc list-inside space-y-2">${course.curriculum.map(item => `<li>${item}</li>`).join('')}</ul></div>`,
-                    reviews: `<div class="prose max-w-none prose-headings:text-header-dark prose-p:text-header-dark/90"><h3 class="text-xl font-bold mb-3">Participant Feedback</h3><blockquote class="border-l-4 border-dirt pl-4 italic">"An incredible experience. The guides were extremely knowledgeable and patient, especially with beginners. I felt safe the entire time."</blockquote><p class="mt-4">Summary: Consistently praised for professional, safety-conscious guides who create a positive learning environment. The comprehensive curriculum is a major plus for those serious about building a strong skill set.</p></div>`,
-                    prereqs: `<div class="prose max-w-none prose-headings:text-header-dark prose-p:text-header-dark/90"><h3 class="text-xl font-bold mb-3">Fitness & Experience</h3><p class="bg-stone/50 p-4 rounded-lg shadow-sm">${course.fitness}</p></div>`
-                };
-
-                function switchModalTab(tabName) {
-                    modalTabContent.innerHTML = tabContents[tabName];
-                    detailsModal.querySelectorAll('.modal-tab').forEach(t => {
-                        t.classList.remove('active', 'text-dirt', 'border-dirt');
-                        t.classList.add('hover:text-dirt');
-                    });
-                    const activeTab = detailsModal.querySelector(`.modal-tab[data-tab="${tabName}"]`);
-                    activeTab.classList.add('active', 'text-dirt', 'border-dirt');
-                    activeTab.classList.remove('hover:text-dirt');
-                }
-                
-                detailsModal.querySelectorAll('.modal-tab').forEach(tab => {
-                    tab.addEventListener('click', () => switchModalTab(tab.dataset.tab));
-                });
-
-                switchModalTab('overview');
-                detailsModal.classList.remove('hidden'); document.body.style.overflow = 'hidden';
-            }
-            function openCompareModal() {
-                 if (comparisonList.length < 2) return;
-                 const selected = comparisonList.map(id => courses.find(c => c.id === id));
-                 const allSkills = [...new Set(selected.flatMap(c => c.curriculum))];
-                 let tableHTML = `<div class="modal-content bg-wood-panel rounded-lg shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-y-auto transform scale-95 mt-8 p-4 sm:p-6"><div class="flex justify-between items-center mb-4"><h2 class="text-2xl md:text-3xl font-bold text-header-dark">Course Comparison</h2><button class="btn-close-modal text-3xl text-slate-500 hover:text-white">&times;</button></div><div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="bg-header-dark/10"><th class="p-3 font-semibold text-header-dark">Feature</th>${selected.map(c => `<th class="p-3 font-semibold text-header-dark">${c.name}</th>`).join('')}</tr></thead><tbody><tr class="border-b border-yellow-800/20"><td class="p-3 font-semibold">Price</td>${selected.map(c => `<td class="p-3">€${c.price}</td>`).join('')}</tr><tr class="border-b border-yellow-800/20"><td class="p-3 font-semibold">Duration</td>${selected.map(c => `<td class="p-3">${c.duration > 89 ? 'Season' : c.duration + ' Days'}</td>`).join('')}</tr><tr class="border-b border-yellow-800/20"><td class="p-3 font-semibold">Ratio</td>${selected.map(c => `<td class="p-3">${c.ratio}</td>`).join('')}</tr><tr class="border-b border-yellow-800/20"><td class="p-3 font-semibold">Key Skills</td>${selected.map(c => `<td class="p-3 text-xs">${c.curriculum.slice(0,3).join(', ')}...</td>`).join('')}</tr></tbody></table></div></div>`;
-                 compareModal.innerHTML = tableHTML; compareModal.classList.remove('hidden'); document.body.style.overflow = 'hidden';
-            }
-
-            const toastEl = document.getElementById('toast-notification');
-            function showToast(message) { toastEl.textContent = message; toastEl.classList.remove('opacity-0'); setTimeout(() => toastEl.classList.add('opacity-0'), 3000); }
-            function toggleCompare(courseId) {
-                const index = comparisonList.indexOf(courseId);
-                if (index > -1) { comparisonList.splice(index, 1); } else { if (comparisonList.length < 3) { comparisonList.push(courseId); } else { showToast("Max 3 courses to compare."); } }
-                renderCourses(); updateCompareTray();
-            }
-
-            const compareTray = document.getElementById('compare-tray');
-            const compareItemsContainer = document.getElementById('compare-items');
-            function updateCompareTray() {
-                compareTray.classList.toggle('show', comparisonList.length > 0);
-                compareItemsContainer.innerHTML = comparisonList.map(id => `<div class="bg-stone text-header-dark text-sm font-semibold px-2 py-1 rounded">${courses.find(c=>c.id===id).school}</div>`).join('');
-                document.getElementById('compare-now-btn').disabled = comparisonList.length < 2;
-            }
-            function clearCompare() { comparisonList = []; renderCourses(); updateCompareTray(); }
-
-            courseListEl.addEventListener('click', (e) => { if (e.target.matches('.btn-details')) openDetailsModal(parseInt(e.target.dataset.id)); if (e.target.matches('.btn-compare')) toggleCompare(parseInt(e.target.dataset.id)); });
-            function closeModal(modal) { modal.classList.add('hidden'); document.body.style.overflow = ''; }
-            detailsModal.addEventListener('click', (e) => { if (e.target.matches('.btn-close-modal') || e.target.classList.contains('modal-overlay')) closeModal(detailsModal); });
-            compareModal.addEventListener('click', (e) => { if (e.target.matches('.btn-close-modal') || e.target.classList.contains('modal-overlay')) closeModal(compareModal); });
-            document.getElementById('compare-now-btn').addEventListener('click', openCompareModal);
-            document.getElementById('clear-compare-btn').addEventListener('click', clearCompare);
-            filters.forEach(filter => filter.addEventListener('change', renderCourses));
-
-            const tabs = document.querySelectorAll('.tab');
-            const tabPanes = document.querySelectorAll('.tab-pane');
-            tabs.forEach(tab => tab.addEventListener('click', () => { tabs.forEach(t => t.classList.remove('active')); tab.classList.add('active'); tabPanes.forEach(p => p.classList.toggle('hidden', p.id !== `${tab.dataset.tab}-content`)); }));
-
-            const costChart = new Chart(document.getElementById('costChart').getContext('2d'), { type: 'bar', data: { labels: ['European Classic (Chamonix)', 'US Glacier School (PNW)', 'Budget Club (Colorado)'], datasets: [{ label: 'Estimated Trip Cost (€)', data: [2300, 2400, 930], backgroundColor: ['#2F4F4F', '#A0522D', '#7f8c8d'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `Est. Total: ${new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(c.parsed.y)}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => '€' + v.toLocaleString() } } } } });
-
-            const budgetPathway = document.getElementById('budget-pathway');
-            const budgetInputs = { course: document.getElementById('cost-course'), accom: document.getElementById('cost-accom'), food: document.getElementById('cost-food'), gear: document.getElementById('cost-gear') };
-            const budgetData = { chamonix: { course: 1145, accom: 600, food: 300, gear: 250 }, pnw: { course: 1700, accom: 280, food: 230, gear: 185 }, colorado: { course: 560, accom: 0, food: 185, gear: 185 } };
-            const totalCostEl = document.getElementById('total-cost');
-            function calculateTotal() { const total = Object.values(budgetInputs).reduce((s, i) => s + (Number(i.value) || 0), 0); totalCostEl.textContent = '€' + total.toLocaleString(); }
-            function updateCalculator() { Object.assign(budgetInputs, Object.fromEntries(Object.entries(budgetData[budgetPathway.value]).map(([k,v]) => [k, (budgetInputs[k].value=v, budgetInputs[k])]))); calculateTotal(); }
-            budgetPathway.addEventListener('change', updateCalculator);
-            Object.values(budgetInputs).forEach(input => input.addEventListener('input', calculateTotal));
+            // ... all the way down to the end of the original script ...
+            // ...
             
             // Page Navigation Logic
             const navTabs = document.querySelectorAll('.nav-tab, #mobile-menu button, #main-logo');
@@ -397,6 +308,7 @@
             const progressBarWrapper = document.getElementById('progress-bar-container-wrapper');
             const mobileMenu = document.getElementById('mobile-menu');
 
+            // This function is defined here, in the main script scope
             function switchPage(page) {
                 if(page === 'plan') {
                     journeyPage.classList.add('hidden');
@@ -431,197 +343,19 @@
                 });
             });
 
-            // New Effects
-            const gpxPath = document.getElementById('gpx-path-progress');
-            const gpxLabelsContainer = document.getElementById('gpx-labels');
-            const pathLength = gpxPath.getTotalLength();
-            gpxPath.style.strokeDasharray = pathLength;
-            gpxPath.style.strokeDashoffset = pathLength;
-            
-            const labelData = [
-                { id: 'home-plan', text: '🚶‍♂️', xPercent: 0.04, class: 'text-lg', progress: 0 },
-                { id: 'foundations', text: 'Foundations', xPercent: 0.208, class: 'text-xs font-bold', progress: 0.22 },
-                { id: 'courses', text: 'Courses', xPercent: 0.5, class: 'text-xs font-bold', progress: 0.48 },
-                { id: 'online', text: 'Online Prep', xPercent: 0.67, class: 'text-xs font-bold', progress: 0.73 },
-                { id: 'plan', text: 'Budget', xPercent: 0.83, class: 'text-xs font-bold', progress: 0.88 },
-                { id: 'finish', text: '🏔️', xPercent: 0.96, class: 'text-lg', progress: 1.0 }
-            ];
+            // ... (The rest of the original code, like the GPX progress bar, etc.)
 
-            const path = document.getElementById('gpx-path-base');
-            const svgWidth = 1200;
-            labelData.forEach(data => {
-                const label = document.createElement('a');
-                label.href = `#${data.id}`;
-                label.id = `label-${data.id}`;
-                label.className = `gpx-label hidden md:block ${data.class}`;
-                label.textContent = data.text;
-                
-                const point = path.getPointAtLength(data.xPercent * pathLength);
-                label.style.left = `${(point.x / svgWidth) * 100}%`;
-                label.dataset.pos = data.progress;
-
-                gpxLabelsContainer.appendChild(label);
-            });
-            const gpxLabels = document.querySelectorAll('.gpx-label');
-            
-            window.addEventListener('scroll', () => {
-                if (!document.body.classList.contains('plan-active')) return;
-
-                let currentSection = 'home-plan';
-                const scrollPosition = window.pageYOffset;
-                
-                document.querySelectorAll('#plan-page main section[id]').forEach(section => {
-                     if(scrollPosition >= section.offsetTop - 120) {
-                         currentSection = section.id;
-                     }
-                });
-
-                let targetProgress = labelData.find(l => l.id === currentSection)?.progress || 0;
-                
-                const totalScrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-                if (scrollPosition + window.innerHeight >= document.body.scrollHeight - 2) {
-                    targetProgress = 1.0;
-                }
-                
-                const drawLength = pathLength * targetProgress;
-                gpxPath.style.strokeDashoffset = pathLength - drawLength;
-
-                gpxLabels.forEach(label => {
-                    const labelPos = parseFloat(label.dataset.pos);
-                    label.classList.toggle('gpx-label-active', targetProgress >= labelPos);
-                });
-            });
-
-            // Slideshow logic
-            const slides = [
-                { text: "Two years ago, I never could have imagined this to be me...", image: "https://placehold.co/1200x800/81B29A/ffffff?text=Stegosaurus+Ridge" },
-                { text: "My fear of heights was paralyzing. Footbridges left me trembling, looking down grand steps made me nauseous, and peering over any cliff meant I had to lie flat on my belly.", image: "https://placehold.co/1200x800/34495e/ffffff?text=Looking+Down" },
-                { text: "But life has a way of pushing us. After my bachelor's in Tainan, I moved to Taipei for my master's degree.", image: "https://placehold.co/1200x800/E07A5F/ffffff?text=Taipei+City" },
-                { text: "To manage stress and ADHD, I turned to sports. But my usual routine grew monotonous. I craved a real challenge.", image: "https://placehold.co/1200x800/F2CC8F/3D405B?text=Cycling+Path" },
-                { text: "That's when I looked up at the mountains surrounding Taipei. I started with the Grand Trails and was instantly hooked. They became my sanctuary.", image: "https://placehold.co/1200x800/81B29A/ffffff?text=Taipei+Trail" },
-                { text: "I decided to combine my passions: languages, friendships, and hiking. I posted in a language exchange group, declaring my goal to 'traverse every hiking path and summit every peak' around Taipei.", image: "https://placehold.co/1200x800/3D405B/ffffff?text=Social+Media+Post" },
-                { text: "The response was incredible. That summer, I did my first multi-day hike. More adventures followed, in Japan and Europe. I even created a systematic progression list for Taiwan's most demanding routes.", image: "https://placehold.co/1200x800/E07A5F/ffffff?text=Hiking+Collage" },
-                { text: "But as I hiked with international friends, I saw troubling patterns in Taiwan's hiking culture—frustrations shared by many foreign visitors.", image: "https://placehold.co/1200x800/34495e/ffffff?text=Contemplative+View" },
-                { 
-                    text: "That's why I started this learning journey. Just as I decided to conquer my fear of heights, I now aim to help make Taiwan a better place for hiking, for everyone.", 
-                    image: "https://placehold.co/1200x800/81B29A/ffffff?text=Mountain+Summit",
-                    actions: [
-                        { text: "See how I<br>conquered<br>heights", href: "list/", arrow: "🔗" },
-                        { text: "Read about<br>hiking issues<br>in Taiwan", page: "taiwan", arrow: "☝️" },
-                        { text: "See my<br>action plan", page: "plan", arrow: "☝️" }
-                    ]
-                },
-            ];
-
-            let currentSlide = 0;
-            const slideshowContainer = document.getElementById('slideshow');
-            const prevButton = document.getElementById('prev-slide');
-            const nextButton = document.getElementById('next-slide');
-
-
-            function renderSlide() {
-                slideshowContainer.innerHTML = '';
-                slides.forEach((slide, index) => {
-                    const slideEl = document.createElement('div');
-                    slideEl.className = 'slide';
-                    slideEl.style.backgroundImage = `url(${slide.image})`;
-                    slideEl.style.opacity = index === currentSlide ? '1' : '0';
-                    
-                    let actionsHTML = '';
-                    if (slide.actions) {
-                        const upActions = slide.actions.filter(a => a.arrow === '☝️');
-                        const externalAction = slide.actions.find(a => a.arrow === '🔗');
-
-                        actionsHTML = `<div class="absolute top-0 left-0 right-0 h-full pointer-events-none">
-                            <div class="container mx-auto px-4">
-                                <!-- Mirror navbar structure for positioning ONLY -->
-                                <nav class="flex justify-between items-center py-4">
-                                    <div class="text-xl md:text-2xl font-bold opacity-0">🏔️ Micah's Mountain Quest</div>
-                                    <div class="hidden md:flex items-center space-x-8">
-                                        <div class="relative">
-                                            <div class="opacity-0 font-medium border-b-2 border-transparent">Journey</div>
-                                        </div>
-                                        <div class="relative">
-                                            <div class="opacity-0 font-medium border-b-2 border-transparent">Taiwan's Issues</div>
-                                            <!-- Action button centered on tab - VISIBLE -->
-                                            <button data-page="taiwan" class="action-link absolute top-20 left-1/2 transform -translate-x-1/2 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto">
-                                                <span class="text-2xl">☝️</span>
-                                                <span class="max-w-[150px] leading-tight text-center">Read about<br>hiking issues<br>in Taiwan</span>
-                                            </button>
-                                        </div>
-                                        <div class="relative">
-                                            <div class="opacity-0 font-medium border-b-2 border-transparent">Plan</div>
-                                            <!-- Action button centered on tab - VISIBLE -->
-                                            <button data-page="plan" class="action-link absolute top-20 left-1/2 transform -translate-x-1/2 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto">
-                                                <span class="text-2xl">☝️</span>
-                                                <span class="max-w-[150px] leading-tight text-center">See my<br>action plan</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>`;
-                    }
-
-                    slideEl.innerHTML = `<div class="slide-text">
-                        <p class="text-xl md:text-3xl font-semibold">${slide.text}</p>
-                    </div>
-                    ${actionsHTML}`;
-                    slideshowContainer.appendChild(slideEl);
-                });
-                updateSlideButtons();
-            }
-            
-            slideshowContainer.addEventListener('click', (e) => {
-                const actionButton = e.target.closest('.action-link');
-                if(actionButton && actionButton.dataset.page) {
-                    switchPage(actionButton.dataset.page);
-                }
-            });
-
-            // function syncActionButtonsWithNavbar() {
-            //     const taiwanTab = document.querySelector('.nav-tab[data-page="taiwan"]');
-            //     const planTab = document.querySelector('.nav-tab[data-page="plan"]');
-            //     const taiwanButton = document.querySelector('.action-link[data-page="taiwan"]');
-            //     const planButton = document.querySelector('.action-link[data-page="plan"]');
-                
-            //     if (taiwanTab && taiwanButton) {
-            //         const rect = taiwanTab.getBoundingClientRect();
-            //         taiwanButton.style.left = `${rect.left}px`;
-            //     }
-                
-            //     if (planTab && planButton) {
-            //         const rect = planTab.getBoundingClientRect();
-            //         planButton.style.left = `${rect.left}px`;
-            //     }
-            // }
-            // window.addEventListener('resize', syncActionButtonsWithNavbar);
-            
-            function updateSlideButtons(){
-                prevButton.classList.toggle('hidden', currentSlide === 0);
-                nextButton.classList.toggle('hidden', currentSlide === slides.length - 1);
-            }
-
-            nextButton.addEventListener('click', () => {
-                if (currentSlide < slides.length - 1) {
-                    currentSlide++;
-                    renderSlide();
-                }
-            });
-
-            prevButton.addEventListener('click', () => {
-                if (currentSlide > 0) {
-                    currentSlide--;
-                    renderSlide();
-                }
-            });
+            // 3. INITIALIZE your new modules at the end, right before the closing brace.
+            // Pass the data and the function the module needs to work.
+            initSlideshow(slidesData, switchPage);
 
             // Initial Page Setup
             switchPage('journey');
             renderCourses();
             updateCalculator();
-            renderSlide();
+            // renderSlide(); // This is now called inside initSlideshow
         });
+
     </script>
 </body>
 </html>
