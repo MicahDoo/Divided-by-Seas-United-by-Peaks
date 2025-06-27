@@ -580,33 +580,51 @@
             });
             const gpxLabels = document.querySelectorAll('.gpx-label');
             
-            window.addEventListener('scroll', () => {
-                if (!document.body.classList.contains('plan-active')) return;
-
-                let currentSection = 'home-plan';
-                const scrollPosition = window.pageYOffset;
-                
-                document.querySelectorAll('#plan-page main section[id]').forEach(section => {
-                     if(scrollPosition >= section.offsetTop - 120) {
-                         currentSection = section.id;
-                     }
-                });
-
-                let targetProgress = labelData.find(l => l.id === currentSection)?.progress || 0;
-                
-                const totalScrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-                if (scrollPosition + window.innerHeight >= document.body.scrollHeight - 2) {
-                    targetProgress = 1.0;
-                }
-                
-                const drawLength = pathLength * targetProgress;
+            let currentProgress = 0;
+            let targetProgress = 0;
+            
+            function animateProgress() {
+                if (Math.abs(currentProgress - targetProgress) < 0.001) return;
+            
+                // Smooth interpolation (lerp)
+                currentProgress += (targetProgress - currentProgress) * 0.15;
+            
+                const drawLength = pathLength * currentProgress;
                 gpxPath.style.strokeDashoffset = pathLength - drawLength;
-
+            
                 gpxLabels.forEach(label => {
                     const labelPos = parseFloat(label.dataset.pos);
-                    label.classList.toggle('gpx-label-active', targetProgress >= labelPos);
+                    label.classList.toggle('gpx-label-active', currentProgress >= labelPos);
                 });
+            
+                requestAnimationFrame(animateProgress);
+            }
+            
+            window.addEventListener('scroll', () => {
+                if (document.getElementById('plan-page').classList.contains('hidden')) return;
+            
+                let currentSection = 'home-plan';
+                const scrollPosition = window.pageYOffset;
+            
+                document.querySelectorAll('#plan-page main section[id]').forEach(section => {
+                    if (scrollPosition >= section.offsetTop - 120) {
+                        currentSection = section.id;
+                    }
+                });
+            
+                let newProgress = labelData.find(l => l.id === currentSection)?.progress || 0;
+            
+                const totalScrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (scrollPosition + window.innerHeight >= document.body.scrollHeight - 2) {
+                    newProgress = 1.0;
+                }
+            
+                if (Math.abs(newProgress - targetProgress) > 0.001) {
+                    targetProgress = newProgress;
+                    requestAnimationFrame(animateProgress);
+                }
             });
+
 
             // 3. INITIALIZE your new modules here.
             // Pass the imported data and the necessary functions (like switchPage) to them.
