@@ -1,6 +1,6 @@
 const slides = [
     { 
-        text: "Two years ago, I never could have imagined this to be me...", 
+        text: "Two years ago, I NEVER could have imagined this to be me...", 
         image: "https://placehold.co/1200x800/81B29A/ffffff?text=Stegosaurus+Ridge" },
     { 
         text: "My fear of heights was paralyzing. Footbridges left me trembling, looking down grand steps made me nauseous, and peering over any cliff meant I had to lie flat on my belly.", 
