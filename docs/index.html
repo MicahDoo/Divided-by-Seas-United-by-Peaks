@@ -514,7 +514,7 @@
                 document.body.classList.add(pageName + "-active");
 
                 // This logic handles the visibility of the action buttons
-                if (page != 'journey') {
+                if (pageName != 'journey') {
                     // If we're on the journey page, tell the slideshow to update its buttons
                     if (window.slideshow) {
                         window.slideshow.updateUI();
