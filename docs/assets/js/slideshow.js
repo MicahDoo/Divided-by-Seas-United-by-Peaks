@@ -1,3 +1,5 @@
+// This is the slideshow logic
+
 export function initSlideshow(slides, switchPage) {
     let currentSlide = 0;
     const slideshowContainer = document.getElementById('slideshow');
