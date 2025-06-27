@@ -27,9 +27,9 @@ const slides = [
         text: "That's why I started this learning journey. Just as I decided to conquer my fear of heights, I now aim to help make Taiwan a better place for hiking, for everyone.", 
         image: "https://placehold.co/1200x800/81B29A/ffffff?text=Mountain+Summit",
         actions: [
-            { id: "list" },
-            { id: "dossier", page: "taiwan", arrow: "☝️" },
-            { id: "plan", page: "plan", arrow: "☝️" }
+            { id: "list", page: ""},
+            { id: "dossier", page: "taiwan"},
+            { id: "plan", page: "plan"}
         ]
     },
 ];
