@@ -213,7 +213,7 @@
             </section>
         </div>
 
-        <div id="taiwan-page" class="hidden">
+        <div id="dossier-page" class="hidden">
             <section class="hero-layered text-center px-4 relative">
                 <div class="container mx-auto relative z-20 flex flex-col justify-center h-full">
                     <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight" style="text-shadow: 0px 2px 4px rgba(45, 58, 58, 0.5);">Hiking in Taiwan: The Path Forward</h1>
@@ -286,19 +286,17 @@
                 </section>
             </main>
         </div>
-    </div>
-
-
-    <div id="progress-bar-container-wrapper" class="hidden">
-        <div class="gpx-progress-container h-16 shadow-inner">
-            <div class="relative w-full h-full container mx-auto px-4">
-                <div class="gpx-elements">
-                    <svg id="gpx-path-svg" class="absolute top-0 left-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 60">
-                        <path id="gpx-path-base" d="M 50 50 l 15-2 l 10 3 l 15-7 l 10 7 l 15-3 l 10 2 l 15 0 L 250 20 L 265 30 l 15-5 l 10 8 l 15-8 l 10 3 l 15-5 l 20 8 l 15-3 L 450 25 L 465 35 l 15-8 l 10 5 l 15-10 l 10 8 l 15-3 L 600 15 L 615 25 l 15-5 l 10 8 l 15-3 l 10-5 l 15 8 l 15 0 L 800 10 L 815 20 l 15-5 l 10 8 l 15-3 l 10 5 l 15-8 l 10-2 l 15 8 L 1000 20 L 1015 30 l 15-8 l 10 5 l 15-3 l 10 8 l 15-5 l 60-5" stroke="#7f8c8d" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
-                        <path id="gpx-path-progress" d="M 50 50 l 15-2 l 10 3 l 15-7 l 10 7 l 15-3 l 10 2 l 15 0 L 250 20 L 265 30 l 15-5 l 10 8 l 15-8 l 10 3 l 15-5 l 20 8 l 15-3 L 450 25 L 465 35 l 15-8 l 10 5 l 15-10 l 10 8 l 15-3 L 600 15 L 615 25 l 15-5 l 10 8 l 15-3 l 10-5 l 15 8 l 15 0 L 800 10 L 815 20 l 15-5 l 10 8 l 15-3 l 10 5 l 15-8 l 10-2 l 15 8 L 1000 20 L 1015 30 l 15-8 l 10 5 l 15-3 l 10 8 l 15-5 l 60-5" stroke="#A0522D" stroke-width="4" fill="none"/>
-                    </svg>
-                    <div id="gpx-labels" class="absolute w-full h-full top-0 left-0">
-                         </div>
+        <div id="progress-bar-container-wrapper" class="hidden">
+            <div class="gpx-progress-container h-16 shadow-inner">
+                <div class="relative w-full h-full container mx-auto px-4">
+                    <div class="gpx-elements">
+                        <svg id="gpx-path-svg" class="absolute top-0 left-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 60">
+                            <path id="gpx-path-base" d="M 50 50 l 15-2 l 10 3 l 15-7 l 10 7 l 15-3 l 10 2 l 15 0 L 250 20 L 265 30 l 15-5 l 10 8 l 15-8 l 10 3 l 15-5 l 20 8 l 15-3 L 450 25 L 465 35 l 15-8 l 10 5 l 15-10 l 10 8 l 15-3 L 600 15 L 615 25 l 15-5 l 10 8 l 15-3 l 10-5 l 15 8 l 15 0 L 800 10 L 815 20 l 15-5 l 10 8 l 15-3 l 10 5 l 15-8 l 10-2 l 15 8 L 1000 20 L 1015 30 l 15-8 l 10 5 l 15-3 l 10 8 l 15-5 l 60-5" stroke="#7f8c8d" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+                            <path id="gpx-path-progress" d="M 50 50 l 15-2 l 10 3 l 15-7 l 10 7 l 15-3 l 10 2 l 15 0 L 250 20 L 265 30 l 15-5 l 10 8 l 15-8 l 10 3 l 15-5 l 20 8 l 15-3 L 450 25 L 465 35 l 15-8 l 10 5 l 15-10 l 10 8 l 15-3 L 600 15 L 615 25 l 15-5 l 10 8 l 15-3 l 10-5 l 15 8 l 15 0 L 800 10 L 815 20 l 15-5 l 10 8 l 15-3 l 10 5 l 15-8 l 10-2 l 15 8 L 1000 20 L 1015 30 l 15-8 l 10 5 l 15-3 l 10 8 l 15-5 l 60-5" stroke="#A0522D" stroke-width="4" fill="none"/>
+                        </svg>
+                        <div id="gpx-labels" class="absolute w-full h-full top-0 left-0">
+                             </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -491,9 +489,11 @@
             
             // Page Navigation Logic
             const navTabs = document.querySelectorAll('.nav-tab, #mobile-menu button, #main-logo');
-            const journeyPage = document.getElementById('journey-page');
-            const taiwanPage = document.getElementById('taiwan-page');
-            const planPage = document.getElementById('plan-page');
+            const pages = [
+                document.getElementById('journey-page'),
+                document.getElementById('dossier-page'),
+                document.getElementById('plan-page')
+            ]
             const progressBarWrapper = document.getElementById('progress-bar-container-wrapper');
             
             const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -503,26 +503,15 @@
                 mobileMenu.classList.toggle('hidden');
             });
 
-            function switchPage(page) {
-                if(page === 'plan') {
-                    journeyPage.classList.add('hidden');
-                    taiwanPage.classList.add('hidden');
-                    planPage.classList.remove('hidden');
-                    progressBarWrapper.classList.remove('hidden');
-                    document.body.classList.add('plan-active');
-                } else if (page === 'dossier') {
-                    journeyPage.classList.add('hidden');
-                    taiwanPage.classList.remove('hidden');
-                    planPage.classList.add('hidden');
-                    progressBarWrapper.classList.add('hidden');
-                    document.body.classList.remove('plan-active');
-                } else { // 'journey' or 'home'
-                    journeyPage.classList.remove('hidden');
-                    taiwanPage.classList.add('hidden');
-                    planPage.classList.add('hidden');
-                    progressBarWrapper.classList.add('hidden');
-                    document.body.classList.remove('plan-active');
-                }
+            function switchPage(pageName) {
+                pages.foreach (page => {
+                    if (page.id == pageName + "-page") {
+                        page.classList.remove('hidden');
+                    } else {
+                        page.classList.add('hidden');
+                    }
+                });
+                document.body.classList.add(pageName + "-active");
 
                 // --- ADD THIS LOGIC ---
                 // This logic handles the visibility of the action buttons
