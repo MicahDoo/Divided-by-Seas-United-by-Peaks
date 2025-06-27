@@ -166,27 +166,16 @@
                 <button id="mobile-menu-button" class="md:hidden text-header-dark text-2xl">☰</button>
             </nav>
         </div>
-        <div id="mobile-menu" class="hidden md:hidden absolute top-full right-4 mt-2 w-64 bg-neutral-100/90 backdrop-blur-lg rounded-md shadow-lg py-1">
-          <div class="divide-y divide-slate-200">
-            <div class="py-2 px-4">
-              <div class="text-sm font-medium text-header-dark">Journey</div>
-              <a href="./list/" class="flex justify-between items-center text-dirt text-sm font-semibold mt-1 hover:underline">
-                See list <span class="text-lg">🔗</span>
-              </a>
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full right-4 mt-2 w-48 bg-neutral-100/90 backdrop-blur-lg rounded-md shadow-lg py-1">
+            <div class="relative flex flex-row items-center">
+                <button id="list" type="pointer" class="action-button hidden action-link absolute top-full mt-4 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto cursor-pointer">
+                    <span class="text-2xl">🔗</span>
+                    <span class="max-w-[150px] leading-tight text-center">See my<br>progression list</span>
+                </button>
+                <button data-page="journey" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Journey</button>
             </div>
-            <div class="py-2 px-4">
-              <div class="text-sm font-medium text-header-dark">Taiwan's Issues</div>
-              <a href="#" onclick="switchPage('dossier')" class="flex justify-between items-center text-dirt text-sm font-semibold mt-1 hover:underline">
-                See dossier <span class="text-lg">☝️</span>
-              </a>
-            </div>
-            <div class="py-2 px-4">
-              <div class="text-sm font-medium text-header-dark">Plan</div>
-              <a href="#" onclick="switchPage('plan')" class="flex justify-between items-center text-dirt text-sm font-semibold mt-1 hover:underline">
-                See plan <span class="text-lg">☝️</span>
-              </a>
-            </div>
-          </div>
+            <button data-page="dossier" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Taiwan's Issues</button>
+            <button data-page="plan" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Plan</button>
         </div>
     </header>
     
