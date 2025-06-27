@@ -1,56 +1,55 @@
-// This function receives the slides and the switchPage function as arguments
-// It does NOT import the slide data itself.
-
 export function initSlideshow(slides, switchPage) {
     let currentSlide = 0;
     const slideshowContainer = document.getElementById('slideshow');
     const prevButton = document.getElementById('prev-slide');
     const nextButton = document.getElementById('next-slide');
 
-    function renderSlide() {
-        // --- 1. Render the visual part of the slide ---
-        slideshowContainer.innerHTML = ''; // Clear previous slides
-        const slideData = slides[currentSlide];
-
-        const slideEl = document.createElement('div');
-        // We set a background image and transition properties for a fade effect
-        slideEl.className = 'slide absolute inset-0 transition-opacity duration-1000 ease-in-out';
-        slideEl.style.backgroundImage = `url(${slideData.image})`;
-        // Set opacity to 1 to make it visible
-        slideEl.style.opacity = '1'; 
+    function renderSlides() {
+        slideshowContainer.innerHTML = '';
         
-        slideEl.innerHTML = `<div class="slide-text"><p class="text-xl md:text-3xl font-semibold">${slideData.text}</p></div>`;
-        slideshowContainer.appendChild(slideEl);
+        slides.forEach((slide, index) => {
+            const slideEl = document.createElement('div');
+            slideEl.className = 'slide';
+            slideEl.style.backgroundImage = `url(${slide.image})`;
+            slideEl.style.opacity = index === currentSlide ? '1' : '0';
+            slideEl.innerHTML = `<div class="slide-text"><p class="text-xl md:text-3xl font-semibold">${slide.text}</p></div>`;
+            slideshowContainer.appendChild(slideEl);
+        });
 
-        // --- 2. Handle the action button logic ---
-        // First, hide all main action buttons to reset the state
-        document.querySelectorAll('.action-button').forEach(btn => btn.classList.add('hidden'));
-
-        // Check if we are in "web mode" (i.e., not mobile)
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const isWebMode = window.getComputedStyle(mobileMenuButton).display === 'none';
-        isWebMode = true;
-
-        // If the current slide has an 'actions' array and we're in web mode...
-        if (slideData.actions) {
-            if (isWebMode){
-                // ...loop through the actions and show the corresponding buttons.
-                slideData.actions.forEach(action => {
-                    const actionBtn = document.getElementById(action.id);
-                    if (actionBtn) {
-                        actionBtn.classList.remove('hidden');
-                    }
-                });
-            }
-        }
-        
-        // Update the visibility of the prev/next slideshow buttons
-        updateSlideButtons();
+        updateUI();
     }
 
-    // --- Event Handlers for Slideshow Navigation ---
-    function updateSlideButtons(){
+    function updateUI() {
+        const slideElements = slideshowContainer.querySelectorAll('.slide');
+        slideElements.forEach((slideEl, index) => {
+            slideEl.style.opacity = index === currentSlide ? '1' : '0';
+        });
+
+        document.querySelectorAll('.action-button').forEach(btn => btn.classList.add('hidden'));
+
+        const currentSlideData = slides[currentSlide];
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const isWebMode = window.getComputedStyle(mobileMenuButton).display === 'none';
+
+        if (currentSlideData.actions && isWebMode) {
+            currentSlideData.actions.forEach(action => {
+                const actionBtn = document.getElementById(action.id);
+                if (actionBtn) {
+                    actionBtn.classList.remove('hidden');
+                }
+            });
+        }
+        
+        updateArrowButtons();
+    }
+
+    // This function contains the definitive logic for button visibility
+    function updateArrowButtons() {
+        // Use classList.toggle to add/remove 'hidden' based on the condition.
+        // Hide the 'prev' button if the current slide is the first one (index 0).
         prevButton.classList.toggle('hidden', currentSlide === 0);
+
+        // Hide the 'next' button if the current slide is the last one.
         nextButton.classList.toggle('hidden', currentSlide === slides.length - 1);
     }
 
@@ -58,7 +57,7 @@ export function initSlideshow(slides, switchPage) {
         e.preventDefault();
         if (currentSlide < slides.length - 1) {
             currentSlide++;
-            renderSlide();
+            updateUI();
         }
     });
 
@@ -66,10 +65,9 @@ export function initSlideshow(slides, switchPage) {
         e.preventDefault();
         if (currentSlide > 0) {
             currentSlide--;
-            renderSlide();
+            updateUI();
         }
     });
 
-    // --- Initial setup ---
-    renderSlide();
+    renderSlides(); 
 }
