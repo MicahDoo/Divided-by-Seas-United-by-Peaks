@@ -32,13 +32,15 @@ export function initSlideshow(slides, switchPage) {
 
         // If the current slide has an 'actions' array and we're in web mode...
         if (slideData.actions) {
-            // ...loop through the actions and show the corresponding buttons.
-            slideData.actions.forEach(action => {
-                const actionBtn = document.getElementById(action.id);
-                if (actionBtn) {
-                    actionBtn.classList.remove('hidden');
-                }
-            });
+            if (isWebMode){
+                // ...loop through the actions and show the corresponding buttons.
+                slideData.actions.forEach(action => {
+                    const actionBtn = document.getElementById(action.id);
+                    if (actionBtn) {
+                        actionBtn.classList.remove('hidden');
+                    }
+                });
+            }
         }
         
         // Update the visibility of the prev/next slideshow buttons
