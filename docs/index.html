@@ -536,6 +536,54 @@
                 });
             });
 
+            const heroSection = document.getElementById('hero-section');
+            const textPanel = document.getElementById('hero-text-panel');
+            const storyButton = document.getElementById('story-scroll-button');
+
+            function handleHeroScroll() {
+                // Only run this logic if the journey page is visible
+                if(document.getElementById('journey-page').classList.contains('hidden')) {
+                    return;
+                }
+
+                const scrollPosition = window.scrollY;
+                const panelTop = textPanel.offsetTop;
+                const panelHeight = textPanel.offsetHeight;
+                const viewportHeight = window.innerHeight;
+
+                // The point where the bottom of the panel is visible
+                const scrollEnd = panelTop + panelHeight - viewportHeight;
+
+                let progress = 0;
+
+                if (scrollPosition > panelTop) {
+                    // Calculate how far we've scrolled past the top of the panel
+                    const scrolledThrough = scrollPosition - panelTop;
+                    // The total distance we can scroll through is the panel's height minus the visible part
+                    const totalScrollableDistance = panelHeight - viewportHeight;
+                    if (totalScrollableDistance > 0) {
+                         progress = scrolledThrough / totalScrollableDistance;
+                    } else {
+                        // If the panel is shorter than the viewport, it's fully visible
+                        progress = 1;
+                    }
+                }
+                
+                progress = Math.min(Math.max(progress, 0), 1); // Clamp between 0 and 1
+
+                // Start with a base opacity of 20% and add up to 80% more based on scroll
+                const newOpacity = 0.2 + (progress * 0.8);
+                storyButton.style.opacity = newOpacity;
+            }
+
+            window.addEventListener('scroll', handleHeroScroll);
+            window.addEventListener('resize', handleHeroScroll); // Recalculate on resize
+            // --- END: ADD THIS CODE ---
+
+
+            // 3. INITIALIZE your new modules here.
+            initSlideshow(slidesData, switchPage);
+
             // 3. INITIALIZE your new modules here.
             // Pass the imported data and the necessary functions (like switchPage) to them.
             initSlideshow(slidesData, switchPage);
