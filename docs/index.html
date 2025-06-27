@@ -275,14 +275,6 @@
 
         // 2. All of your original JavaScript code now lives inside this single DOMContentLoaded listener.
         document.addEventListener('DOMContentLoaded', () => {
-
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
             const courses = [
                 { id: 1, school: 'Compagnie des Guides', name: 'Beginner Course (3-Day)', location: 'Chamonix, France', region: 'europe', duration: 3, price: 630, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, regular sports activity.', curriculum: ['Rock climbing basics', 'Knot tying', 'Belaying', 'Rappelling', 'Glacier travel', 'Crampon/Ice axe use'], inclusions: ['Guide fees', 'Group safety gear'], exclusions: ['Accommodation', 'Lifts', 'Food', 'Personal gear', 'Insurance'] },
                 { id: 2, school: 'Compagnie des Guides', name: 'Beginner Course (5-Day)', location: 'Chamonix, France', region: 'europe', duration: 5, price: 1145, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, comfortable with multi-hour hikes.', curriculum: ['All 3-day skills', 'Crevasse rescue basics', 'Multi-pitch climbing intro', 'Night in a mountain hut'], inclusions: ['Guide fees', 'Group safety gear', 'Hut half-board'], exclusions: ['Valley accommodation', 'Lifts', 'Food (lunches)', 'Personal gear', 'Insurance'] },
@@ -403,7 +395,13 @@
             const taiwanPage = document.getElementById('taiwan-page');
             const planPage = document.getElementById('plan-page');
             const progressBarWrapper = document.getElementById('progress-bar-container-wrapper');
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
 
             function switchPage(page) {
                 if(page === 'plan') {
