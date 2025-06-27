@@ -175,10 +175,10 @@
     
     <div id="page-container">
         <div id="journey-page">
-             <section id="hero-section" class="min-h-screen bg-sky-light flex flex-col">
+            <section id="hero-section" class="min-h-screen bg-sky-light flex flex-col">
                 <div class="flex-grow flex items-center justify-center py-12">
                     <div class="container mx-auto px-4">
-                        <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md prose lg:prose-xl text-left">
+                        <div id="hero-text-panel" class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md prose lg:prose-xl text-left">
                             <h2 class="text-header-dark">The Pull of the Heights</h2>
                             <p>There's a certain quiet magnetism to high places. It's more than just a view; it's a change in perspective. For me, the motivation isn't about conquest or ticking off a list. It's about stepping into an environment that demands presence, resilience, and a deep respect for the natural world. It's about the simplicity of putting one foot in front of the other when everything else falls away.</p>
                             <blockquote>
@@ -190,8 +190,15 @@
                     </div>
                 </div>
             
-                <div class="text-center pb-8">
+                <div id="hero-normal-button" class="text-center pb-8">
                     <a href="#my-story" class="story-link inline-flex flex-col items-center text-header-dark hover:text-dirt transition">
+                        <span class="text-sm font-semibold">See My Story</span>
+                        <span class="text-2xl">↓</span>
+                    </a>
+                </div>
+            
+                <div id="hero-sticky-button" class="sticky bottom-0 inset-x-0 text-center hidden">
+                     <a href="#my-story" class="story-link inline-flex flex-col items-center text-header-dark hover:text-dirt transition py-4">
                         <span class="text-sm font-semibold">See My Story</span>
                         <span class="text-2xl">↓</span>
                     </a>
@@ -444,6 +451,43 @@
                         break;
                 }
             });
+
+            const textPanel = document.getElementById('hero-text-panel');
+            const normalButton = document.getElementById('hero-normal-button');
+            const stickyButton = document.getElementById('hero-sticky-button');
+            
+            function handleHeroButtonVisibility() {
+                if(document.getElementById('journey-page').classList.contains('hidden')) return;
+                
+                const panelHeight = textPanel.offsetHeight;
+                const viewportHeight = window.innerHeight;
+            
+                if (panelHeight > viewportHeight) { // Scenario 2
+                    normalButton.classList.add('hidden');
+                    stickyButton.classList.remove('hidden');
+                    updateStickyButtonOpacity();
+                } else { // Scenario 1
+                    normalButton.classList.remove('hidden');
+                    stickyButton.classList.add('hidden');
+                }
+            }
+            
+            function updateStickyButtonOpacity() {
+                const scrollPosition = window.scrollY;
+                const panelTop = textPanel.offsetTop;
+                const panelHeight = textPanel.offsetHeight;
+                const viewportHeight = window.innerHeight;
+                const totalScrollableDistance = panelHeight - viewportHeight;
+                const scrolledThrough = scrollPosition - (panelTop > 0 ? panelTop : 0);
+                let progress = (totalScrollableDistance > 0) ? (scrolledThrough / totalScrollableDistance) : 1;
+                progress = Math.min(Math.max(progress, 0), 1);
+                const newOpacity = 0.2 + (progress * 0.8);
+                stickyButton.style.opacity = newOpacity;
+            }
+            
+            window.addEventListener('scroll', handleHeroButtonVisibility);
+            window.addEventListener('resize', handleHeroButtonVisibility);
+            handleHeroButtonVisibility();
             
             // Page Navigation Logic
             const navTabs = document.querySelectorAll('.nav-tab, #mobile-menu button, #main-logo');
