@@ -33,6 +33,7 @@ export function initSlideshow(slides, switchPage) {
 
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const isWebMode = window.getComputedStyle(mobileMenuButton).display === 'none';
+        const mobileMenu = document.getElementById('mobile-menu');
 
         if (currentSlideData.actions) {
             currentSlideData.actions.forEach(action => {
@@ -45,7 +46,6 @@ export function initSlideshow(slides, switchPage) {
                     actionBtnMobile.classList.remove('hidden');
                 }
             });
-            const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.remove('hidden');
         } else {
             mobileMenu.classList.add('hidden');
@@ -60,7 +60,7 @@ export function initSlideshow(slides, switchPage) {
     }
 
     nextButton.addEventListener('click', (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         if (currentSlide < slides.length - 1) {
             currentSlide++;
             updateUI();
@@ -69,7 +69,7 @@ export function initSlideshow(slides, switchPage) {
     });
 
     prevButton.addEventListener('click', (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         if (currentSlide > 0) {
             currentSlide--;
             updateUI();
