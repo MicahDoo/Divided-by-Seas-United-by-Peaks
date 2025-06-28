@@ -471,19 +471,26 @@
                 }
             });
 
-            const textPanel = document.getElementById('hero-text-panel');
-            function updateStickyButtonOpacity() {
-                const scrollPosition = window.scrollY;
-                const panelTop = textPanel.offsetTop;
-                const panelHeight = textPanel.offsetHeight;
-                const viewportHeight = window.innerHeight;
-                const totalScrollableDistance = panelHeight - viewportHeight;
-                const scrolledThrough = scrollPosition - (panelTop > 0 ? panelTop : 0);
-                let progress = (totalScrollableDistance > 0) ? (scrolledThrough / totalScrollableDistance) : 1;
-                progress = Math.min(Math.max(progress, 0), 1);
-                const newOpacity = 0.2 + (progress * 0.8);
-                stickyButton.style.opacity = newOpacity;
+            // Add this new function to dynamically set hero-section height
+            function setHeroSectionDynamicHeight() {
+                const header = document.querySelector('header');
+                const storyButtonContainer = document.getElementById('storyButtonContainer');
+                const heroSection = document.getElementById('hero-section');
+    
+                if (header && storyButtonContainer && heroSection) {
+                    const headerHeight = header.offsetHeight;
+                    const footerHeight = storyButtonContainer.offsetHeight; // This is your sticky bottom element
+                    const dynamicMinHeight = window.innerHeight - headerHeight - footerHeight;
+    
+                    heroSection.style.minHeight = `${dynamicMinHeight}px`;
+                }
             }
+    
+            // Call the function initially
+            setHeroSectionDynamicHeight();
+    
+            // Call it again on window resize to adjust for layout changes
+            window.addEventListener('resize', setHeroSectionDynamicHeight);
             
             // Page Navigation Logic
             const navTabs = document.querySelectorAll('.nav-tab, #mobile-menu button, #main-logo');
