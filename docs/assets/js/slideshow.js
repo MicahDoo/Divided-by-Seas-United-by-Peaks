@@ -60,6 +60,7 @@ export function initSlideshow(slides, switchPage) {
         if (currentSlide < slides.length - 1) {
             currentSlide++;
             updateUI();
+            
         }
     });
 
