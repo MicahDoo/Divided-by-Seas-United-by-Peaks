@@ -6,6 +6,7 @@
     <title>My Mountaineering Plan: An Interactive Guide</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏔️</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -520,7 +521,6 @@
                 document.getElementById('dossier-page'),
                 document.getElementById('plan-page')
             ]
-            const progressBarWrapper = document.getElementById('progress-bar-container-wrapper');
             
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -529,43 +529,42 @@
                 mobileMenu.classList.toggle('hidden');
             });
 
-            function switchPage(pageName) {
-                pages.forEach (page => {
-                    if (page.id === pageName + "-page") {
-                        page.classList.remove('hidden');
-                    } else {
-                        page.classList.add('hidden');
-                    }
+            function switchPage(requestedPage) {
+                
+                pages.forEach(page => {
+                    // Toggle 'hidden' class based on whether the page ID matches the requested page
+                    page.classList.toggle('hidden', page.id !== `${requestedPage}-page`);
                 });
-                document.body.classList.add(pageName + "-active");
+                
+                // Remove any existing -active classes from the body
+                // This assumes 'body' might have classes like 'journey-active', 'dossier-active', 'plan-active'
+                document.body.className = document.body.className.split(' ').filter(c => !c.endsWith('-active')).join(' ');
+                // Add the new -active class for the current requested page
+                document.body.classList.add(`${requestedPage}-active`);
 
                 // Show or hide action buttons depending on current page
+                const isJourneyPage = requestedPage === 'journey';
                 document.querySelectorAll('.action-button').forEach(btn => {
-                    if (pageName === 'journey') {
-                        btn.classList.remove('hidden');
-                        window.slideshow.updateUI();
-                    } else {
-                        btn.classList.add('hidden');
-                    }
+                    btn.classList.toggle('hidden', !isJourneyPage); // Add 'hidden' if NOT journey page, remove if it IS.
                 });
                 
                 // Optionally update slideshow buttons if relevant
-                if (window.slideshow && pageName === 'journey') {
+                // Only call updateUI if it's the 'journey' page, and window.slideshow exists
+                if (requestedPage === 'journey' && window.slideshow) {
                     window.slideshow.updateUI();
                 }
-
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                const activeTab = document.querySelector(`.nav-tab[data-page="${pageName}"]`);
-                if(activeTab) activeTab.classList.add('active');
+                
+                // Set active tab and menu item
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.page === requestedPage);
+                });
                 document.querySelectorAll('#mobile-menu button').forEach(button => {
-                    button.classList.remove('mobile-tab-active');
-                    if (button.dataset.page === pageName) {
-                        button.classList.add('mobile-tab-active');
-                    }
+                    button.classList.toggle('mobile-tab-active', button.dataset.page === requestedPage);
                 });
                 
-                window.scrollTo(0,0);
+                window.scrollTo(0,0); //TODO: track a scroll progress for each page
             }
+            
             navTabs.forEach(tab => {
                 tab.addEventListener('click', (e) => {
                     e.preventDefault();
