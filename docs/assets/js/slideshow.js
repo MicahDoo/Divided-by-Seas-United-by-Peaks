@@ -30,9 +30,9 @@ export function initSlideshow(slides, switchPage) {
         const currentSlideData = slides[currentSlide];
 
         document.querySelectorAll('.action-button').forEach(btn => btn.classList.add('hidden'));
+        document.getElementById('mobile-menu').classList.add('hidden');
 
         const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const isWebMode = window.getComputedStyle(mobileMenuButton).display === 'none';
         const mobileMenu = document.getElementById('mobile-menu');
 
         if (currentSlideData.actions) {
@@ -47,8 +47,6 @@ export function initSlideshow(slides, switchPage) {
                 }
             });
             mobileMenu.classList.remove('hidden');
-        } else {
-            mobileMenu.classList.add('hidden');
         }
         
         updateArrowButtons();
