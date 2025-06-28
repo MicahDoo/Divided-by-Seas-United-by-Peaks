@@ -491,6 +491,69 @@
     
             // Call it again on window resize to adjust for layout changes
             window.addEventListener('resize', setHeroSectionDynamicHeight);
+
+            // Function to update the opacity of the "See My Story" button
+            const initialOpacity = 0.15; // Opacity when heavily overlayed with text (more transparent)
+            const finalOpacity = 1;      // Opacity when clear of text (fully opaque)
+            const fadeZoneHeight = 200;  // The scroll distance (in pixels) over which the fade occurs
+            const exponentialPower = 3;  // Determines the curve of the transition (higher value means faster transition towards the end)
+            
+            function updateStoryButtonOpacity() {
+                const heroTextPanel = document.getElementById('hero-text-panel');
+                const storyButtonContainer = document.getElementById('storyButtonContainer');
+                const storyButton = document.getElementById('story-button');
+            
+                // Only apply this effect if all necessary elements exist and the 'journey' page is currently active
+                if (!storyButton || !heroTextPanel || !storyButtonContainer ||
+                    document.getElementById('journey-page').classList.contains('hidden')) {
+                    // If not on the 'journey' page, ensure the button's opacity is reset to its default, making it visible elsewhere
+                    if (storyButton) {
+                        storyButton.style.opacity = '';
+                    }
+                    return;
+                }
+            
+                const heroTextPanelRect = heroTextPanel.getBoundingClientRect();
+                const storyButtonContainerRect = storyButtonContainer.getBoundingClientRect();
+            
+                // Calculate the 'overlap' distance: this is how much of the text panel is still visible above the sticky button.
+                // A positive value indicates the text panel is still visually above the button's top edge (meaning the button is being 'overlayed').
+                // A zero or negative value means the text panel has scrolled completely past the button.
+                const overlap = heroTextPanelRect.bottom - storyButtonContainerRect.top;
+            
+                let opacity;
+            
+                if (overlap <= 0) {
+                    // When the text panel has scrolled completely past the button (or is exactly at its top edge),
+                    // the button should be fully opaque.
+                    opacity = finalOpacity;
+                } else if (overlap >= fadeZoneHeight) {
+                    // When the text panel is still significantly above the button's top edge (i.e., the button is deeply overlayed by it),
+                    // the button should be mostly transparent.
+                    opacity = initialOpacity;
+                } else {
+                    // If the button is within the defined `fadeZoneHeight` (transition zone),
+                    // its opacity will fade smoothly from mostly transparent to opaque.
+                    // `normalizedOverlap` ranges from 1 (at the start of the fade zone) down to 0 (at the end of the fade zone).
+                    const normalizedOverlap = overlap / fadeZoneHeight;
+            
+                    // The expression `(1 - normalizedOverlap)` will go from 0 to 1 as the `overlap` decreases from `fadeZoneHeight` to 0.
+                    // Raising it to an `exponentialPower` makes the transition more rapid towards the end, causing the button to quickly become opaque
+                    // as it moves past the text panel.
+                    opacity = initialOpacity + (finalOpacity - initialOpacity) * Math.pow(1 - normalizedOverlap, exponentialPower);
+                }
+            
+                // Apply the calculated opacity to the 'story-button' element, formatted to two decimal places
+                storyButton.style.opacity = opacity.toFixed(2);
+            }
+            
+            // Attach the `updateStoryButtonOpacity` function to the window's scroll event.
+            // This ensures that the button's opacity is dynamically updated as the user scrolls the page.
+            window.addEventListener('scroll', updateStoryButtonOpacity);
+            
+            // Call the function once initially when the page loads.
+            // This sets the correct opacity for the button right away, even before any scrolling occurs.
+            updateStoryButtonOpacity();
             
             // Page Navigation Logic
             const navTabs = document.querySelectorAll('.nav-tab, #mobile-menu button, #main-logo');
