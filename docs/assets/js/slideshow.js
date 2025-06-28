@@ -56,7 +56,7 @@ export function initSlideshow(slides, switchPage) {
     }
 
     nextButton.addEventListener('click', (e) => {
-        e.preventDefault();
+        //e.preventDefault();
         if (currentSlide < slides.length - 1) {
             currentSlide++;
             updateUI();
@@ -64,7 +64,7 @@ export function initSlideshow(slides, switchPage) {
     });
 
     prevButton.addEventListener('click', (e) => {
-        e.preventDefault();
+       // e.preventDefault();
         if (currentSlide > 0) {
             currentSlide--;
             updateUI();
