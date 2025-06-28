@@ -40,9 +40,9 @@ export function initSlideshow(slides, switchPage) {
                 if (actionBtn) {
                     actionBtn.classList.remove('hidden');
                 }
-                const actionBtnMobile = document.getElementById(action.id+'-mobile');
+                const actionBtnMobile = document.getElementById(action.id + "-mobile");
                 if (actionBtnMobile) {
-                    actionBtn.classList.remove('hidden');
+                    actionBtnMobile.classList.remove('hidden');
                 }
             });
         }
