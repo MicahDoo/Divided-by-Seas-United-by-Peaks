@@ -45,6 +45,8 @@ export function initSlideshow(slides, switchPage) {
                     actionBtnMobile.classList.remove('hidden');
                 }
             });
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.remove('hidden');
         }
         
         updateArrowButtons();
