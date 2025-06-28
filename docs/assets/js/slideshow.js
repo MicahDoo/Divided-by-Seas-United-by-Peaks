@@ -34,10 +34,14 @@ export function initSlideshow(slides, switchPage) {
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const isWebMode = window.getComputedStyle(mobileMenuButton).display === 'none';
 
-        if (currentSlideData.actions && isWebMode) {
+        if (currentSlideData.actions) {
             currentSlideData.actions.forEach(action => {
                 const actionBtn = document.getElementById(action.id);
                 if (actionBtn) {
+                    actionBtn.classList.remove('hidden');
+                }
+                const actionBtnMobile = document.getElementById(action.id+'-mobile');
+                if (actionBtnMobile) {
                     actionBtn.classList.remove('hidden');
                 }
             });
