@@ -131,6 +131,601 @@
                 transform: translateY(-5px);
             }
         }
+        /* Base style for the floating button when it's logically "on" */
+        #hero-floating-button-wrapper.active-floating {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 49; /* Ensure it's above other content */
+            pointer-events: auto; /* Enable clicks */
+        }
+
+        /* Animation classes for the actual link element */
+        .story-link-animated {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            /* Ensure initial state is hidden or transparent */
+            opacity: 0;
+            transform: translateY(100px); /* Start off-screen */
+            pointer-events: none; /* Default to non-interactable */
+        }
+
+        .story-link-animated.show { /* When it should be visible and interacting */
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-sky-light text-slate-800 antialiased">
+
+    <header class="sticky top-0 z-50 bg-header/80 backdrop-blur-md shadow-lg">
+        <div class="container mx-auto px-4">
+            <nav class="flex justify-between items-center py-4">
+                <a href="#" id="main-logo" class="text-xl md:text-2xl font-bold text-header-dark">🏔️ Micah's Mountain Quest</a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="relative flex flex-col items-center">
+                        <button data-page="journey" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Journey</button>
+                        <button id="list" type="pointer" class="action-button hidden action-link absolute top-full mt-4 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto cursor-pointer">
+                            <span class="text-2xl">🔗</span>
+                            <span class="max-w-[150px] leading-tight text-center">See my<br>progression list</span>
+                        </button>
+                    </div>
+                
+                    <div class="relative flex flex-col items-center">
+                        <button data-page="dossier" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Taiwan's Issues</button>
+                        <a id="dossier" type="pointer" class="action-button hidden action-link absolute top-full mt-4 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto cursor-pointer">
+                            <span class="text-2xl">☝️</span>
+                            <span class="max-w-[150px] leading-tight text-center">Read the<br>dossier</span>
+                        </a>
+                    </div>
+                
+                    <div class="relative flex flex-col items-center">
+                        <button data-page="plan" class="nav-tab text-header-dark hover:text-dirt font-medium border-b-2 border-transparent">Plan</button>
+                        <a id="plan" type="pointer" class="action-button hidden action-link absolute top-full mt-4 text-white text-lg font-semibold hover:text-glow transition flex flex-col items-center gap-1 pointer-events-auto cursor-pointer">
+                            <span class="text-2xl">☝️</span>
+                            <span class="max-w-[150px] leading-tight text-center">See the<br>interactive plan</span>
+                        </a>
+                    </div>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-header-dark text-2xl">☰</button>
+            </nav>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full right-4 mt-2 w-48 bg-neutral-100/90 backdrop-blur-lg rounded-md shadow-lg py-1">
+<div class="relative flex items-center">
+                <button id="list-mobile" type="pointer"
+                        class="action-button action-link absolute right-full
+                               text-white text-base md:text-lg font-semibold hover:text-glow
+                               transition flex items-center gap-1 pointer-events-auto cursor-pointer
+                               w-max whitespace-nowrap lg:w-auto lg:whitespace-normal">
+                    <span class="leading-tight text-left py-1">See my<br>progression list</span>
+                    <span class="text-2xl">🔗</span>
+                </button>
+                <button data-page="journey" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Journey</button>
+            </div>
+            <div class="relative flex items-center">
+                <button data-page="dossier" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Taiwan's Issues</button>
+                <button id="dossier-mobile" type="pointer" 
+                        class="action-button action-link absolute right-full w-max
+                               text-white text-base md:text-lg font-semibold hover:text-glow
+                               transition flex items-center gap-1 pointer-events-auto cursor-pointer">
+                    <span class="leading-tight text-cente py-1 w-full">Read the dossier</span>
+                    <span class="text-2xl">👉</span>
+                </button>
+            </div>
+            <div class="relative flex items-center">
+                <button id="plan-mobile" type="pointer"
+                        class="action-button action-link absolute right-full w-max
+                               text-white text-base md:text-lg font-semibold hover:text-glow
+                               transition flex items-center gap-1 pointer-events-auto cursor-pointer">
+                    <span class="leading-tight text-center py-1 w-full">See the<br>interactive plan</span>
+                    <span class="text-xl md:text-2xl">👉</span>
+                </button>
+                <button data-page="plan" class="block w-full text-left py-3 px-4 text-header-dark hover:bg-slate-500/10">Plan</button>
+            </div>
+        </div>
+    </header>
+    
+    <div id="page-container">
+        <div id="journey-page">
+            <section id="hero-section" class="min-h-screen bg-sky-light flex flex-col">
+                <div class="flex-grow flex items-center justify-center py-12">
+                    <div class="container mx-auto px-4">
+                        <div id="hero-text-panel" class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md prose lg:prose-xl text-left">
+                            <h2 class="text-header-dark">The Pull of the Heights</h2>
+                            <p>There's a certain quiet magnetism to high places. It's more than just a view; it's a change in perspective. For me, the motivation isn't about conquest or ticking off a list. It's about stepping into an environment that demands presence, resilience, and a deep respect for the natural world. It's about the simplicity of putting one foot in front of the other when everything else falls away.</p>
+                            <blockquote>
+                                <p>"The mountains are calling and I must go."</p>
+                                <cite>- John Muir</cite>
+                            </blockquote>
+                            <p>This planner is the first step in a long journey. It's the transition from dreaming to doing. By breaking down the process—understanding the skills, finding the right teachers, budgeting for the adventure—the seemingly impossible becomes a series of achievable steps. Each course researched, each piece of gear understood, is a small ascent in itself.</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div id="hero-normal-button" class="text-center pb-8">
+                    <a href="#my-story" class="story-link inline-flex flex-col items-center text-header-dark hover:text-dirt transition">
+                        <span class="text-sm font-semibold">See My Story</span>
+                        <span class="text-2xl">↓</span>
+                    </a>
+                </div>
+            
+                <div id="hero-floating-button-wrapper" class="text-center hidden">
+                     <a href="#my-story" id="hero-floating-button-link" class="story-link story-link-animated inline-flex flex-col items-center text-header-dark hover:text-dirt transition py-4">
+                        <span class="text-sm font-semibold">See My Story</span>
+                        <span class="text-2xl">↓</span>
+                    </a>
+                </div>
+            </section>
+            <section id="my-story" class="slideshow-container">
+                <div id="slideshow" class="relative w-full h-full">
+                </div>
+                <a id="prev-slide" href="#my-story" class="absolute top-1/2 left-4 transform -translate-y-1/2 text-white text-4xl bg-black/30 rounded-full p-2">‹</a>
+                <a id="next-slide" href="#my-story" class="absolute top-1/2 right-4 transform -translate-y-1/2 text-white text-4xl bg-black/30 rounded-full p-2">›</a>
+            </section>
+        </div>
+
+        <div id="dossier-page" class="hidden">
+            <section class="hero-layered text-center px-4 relative">
+                <div class="container mx-auto relative z-20 flex flex-col justify-center h-full">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight" style="text-shadow: 0px 2px 4px rgba(45, 58, 58, 0.5);">Hiking in Taiwan: The Path Forward</h1>
+                    <p class="text-lg md:text-xl text-navy-dark/80 max-w-3xl mx-auto mt-4">Exploring the challenges and opportunities for creating a world-class hiking destination.</p>
+                </div>
+            </section>
+            <section class="py-16 md:py-24 bg-light-blue">
+                 <div class="container mx-auto px-4">
+                    <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md prose lg:prose-xl text-left">
+                        <h2 class="text-header-dark">Observations from the Trail</h2>
+                        <p>This section is a placeholder for detailed analysis of the issues observed within Taiwan's hiking culture, both from personal experience and from discussions with international hikers. Topics may include trail maintenance standards, inconsistent signage, lack of accessible information in English, and cultural differences in trail etiquette.</p>
+                    </div>
+                 </div>
+            </section>
+        </div>
+
+
+        <div id="plan-page" class="hidden">
+            <main>
+                <section id="home-plan" class="hero-layered text-center px-4 relative">
+                    <div class="container mx-auto relative z-20 flex flex-col justify-center h-full">
+                        <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight" style="text-shadow: 0px 2px 4px rgba(45, 58, 58, 0.5);">The Plan</h1>
+                        <p class="text-lg md:text-xl text-navy-dark/80 max-w-3xl mx-auto mt-4">An interactive dashboard to explore courses, compare options, and build a budget.</p>
+                    </div>
+                </section>
+
+                <section id="foundations" class="py-16 md:py-24 bg-sky-light">
+                    <div class="container mx-auto px-4">
+                        <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-header-dark">Foundational Knowledge</h2><p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">A breakdown of the core skills, essential gear, and fitness required to begin the journey safely and confidently.</p></div>
+                        <div class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md"><div class="flex border-b border-gray-300 mb-6"><button data-tab="skills" class="tab flex-1 py-3 px-2 font-semibold text-slate-600 border-b-2 border-transparent hover:border-dirt hover:text-dirt transition active">Core Skills</button><button data-tab="gear" class="tab flex-1 py-3 px-2 font-semibold text-slate-600 border-b-2 border-transparent hover:border-dirt hover:text-dirt transition">Essential Gear</button><button data-tab="fitness" class="tab flex-1 py-3 px-2 font-semibold text-slate-600 border-b-2 border-transparent hover:border-dirt hover:text-dirt transition">Fitness</button></div>
+                            <div id="tab-content">
+                                <div id="skills-content" class="tab-pane"><h3 class="text-2xl font-bold text-header-dark mb-4">The Craft of Alpinism</h3><p class="text-slate-600 mb-6">Introductory courses build a foundation in rock, snow, and ice travel.</p><div class="space-y-4"><div class="p-4 border border-slate-200 rounded-lg"><h4 class="font-bold text-lg text-header-dark">🧗 Rock Craft</h4><p class="text-slate-600 mt-1">Knots, belaying, rappelling, and efficient movement on rock.</p></div><div class="p-4 border border-slate-200 rounded-lg"><h4 class="font-bold text-lg text-header-dark">❄️ Snow & Glacier Travel</h4><p class="text-slate-600 mt-1">Ice axe and crampon use for secure movement on snow and ice, including self-arrest.</p></div><div class="p-4 border border-slate-200 rounded-lg"><h4 class="font-bold text-lg text-header-dark">🧠 Mountain Sense</h4><p class="text-slate-600 mt-1">Navigation, weather interpretation, hazard assessment, and trip planning.</p></div></div></div>
+                                <div id="gear-content" class="hidden tab-pane"><h3 class="text-2xl font-bold text-header-dark mb-4">Gear: Rent vs. Buy Strategy</h3><p class="text-slate-600 mb-6">A smart approach to gear saves money without compromising safety. Rent technical hardware first.</p><div class="grid md:grid-cols-2 gap-6 mt-4"><div class="bg-header-dark/10 p-6 rounded-lg"><h4 class="font-bold text-xl text-center text-header-dark mb-4">✅ Rent These First</h4><ul class="space-y-2 text-slate-700 list-disc list-inside"><li>Ice Axe</li><li>Crampons</li><li>Helmet</li><li>Harness</li></ul></div><div class="bg-dirt/10 p-6 rounded-lg"><h4 class="font-bold text-xl text-center text-dirt mb-4">💰 Consider Buying</h4><ul class="space-y-2 text-slate-700 list-disc list-inside"><li>Mountaineering Boots (Fit is key!)</li><li>Waterproof Shells</li><li>35-45L Backpack</li><li>Layering System</li></ul></div></div></div>
+                                <div id="fitness-content" class="hidden tab-pane"><h3 class="text-2xl font-bold text-header-dark mb-4">Fitness Imperative</h3><p class="text-slate-600 mb-6">Physical fitness is the biggest factor in enjoyment and success. "Mountain fit" is about sustained, multi-hour endurance.</p><div class="mt-4 space-y-4"><div><h4 class="font-bold text-lg text-header-dark">Training Goal</h4><p class="text-slate-600">Hike uphill for several hours with a 10-15 kg (22-33 lbs) pack, day after day.</p></div><div><h4 class="font-bold text-lg text-header-dark">Best Training</h4><p class="text-slate-600"><span class="font-semibold">Cardio:</span> Hike uphill with a weighted pack. <br><span class="font-semibold">Strength:</span> Legs and core (squats, lunges, step-ups).</p></div><div><h4 class="font-bold text-lg text-header-dark">Benchmark</h4><p class="text-slate-600">The ability to ascend 400-500 vertical meters per hour is a strong target for any beginner course.</p></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="courses" class="py-16 md:py-24 bg-sky-mid">
+                    <div class="container mx-auto px-4"><div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-header-dark">Course Finder & Comparison Tool</h2><p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Filter courses to find options matching location, style, and budget. Click for details and add courses to the comparison tool.</p></div>
+                        <div class="bg-white/70 p-4 rounded-lg shadow-sm mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div><label for="filter-region" class="block text-sm font-medium text-slate-700">Region</label><select id="filter-region" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-dirt focus:border-dirt rounded-md"><option value="all">All Regions</option><option value="europe">Europe</option><option value="usa">USA</option><option value="japan">Japan</option></select></div>
+                            <div><label for="filter-style" class="block text-sm font-medium text-slate-700">Style / Focus</label><select id="filter-style" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-dirt focus:border-dirt rounded-md"><option value="all">All Styles</option><option value="all-round">All-Round</option><option value="summit-goal">Summit Goal</option><option value="rock-focus">Rock Focus</option><option value="glacier-skills">Glacier Skills</option><option value="budget-club">Budget / Club</option></select></div>
+                            <div><label for="filter-duration" class="block text-sm font-medium text-slate-700">Duration (Days)</label><select id="filter-duration" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-dirt focus:border-dirt rounded-md"><option value="all">All Durations</option><option value="1-3">1-3 Days</option><option value="4-6">4-6 Days</option><option value="7+">7+ Days</option></select></div>
+                            <div><label for="filter-price" class="block text-sm font-medium text-slate-700">Max Price (EUR)</label><select id="filter-price" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-dirt focus:border-dirt rounded-md"><option value="all">Any Price</option><option value="750">Under €750</option><option value="1500">Under €1500</option><option value="2000">Under €2000</option></select></div>
+                        </div>
+                        <div id="course-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                        <div id="no-results" class="hidden text-center py-12"><p class="text-xl text-slate-500">No courses match criteria. Adjust filters.</p></div>
+                    </div>
+                </section>
+
+                <section id="online" class="py-16 md:py-24 bg-sky-light">
+                    <div class="container mx-auto px-4"><div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-header-dark">Digital Basecamp: Online Prep</h2><p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Online courses are a powerful "pre-course accelerator" to learn theory at home, maximizing valuable time with a guide. They are a supplement, not a substitute.</p></div>
+                        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-dirt"><h3 class="text-xl font-bold text-header-dark">Kaf Adventures</h3><p class="font-semibold text-slate-700 mt-1">$199</p><p class="text-slate-600 mt-2">Comprehensive, self-paced online course covering gear, planning, and glacier travel theory. Includes homework and certification.</p><p class="mt-4 font-semibold text-slate-700">Best for: A pre-course primer for a glacier-focused trip.</p></div>
+                            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-dirt"><h3 class="text-xl font-bold text-header-dark">MTN Sense</h3><p class="font-semibold text-slate-700 mt-1">~$299</p><p class="text-slate-600 mt-2">A huge library of 120+ video lessons from an IFMGA guide with forever access. Covers an exhaustive range of topics.</p><p class="mt-4 font-semibold text-slate-700">Best for: A long-term educational resource.</p></div>
+                            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-dirt"><h3 class="text-xl font-bold text-header-dark">The Mountaineers</h3><p class="font-semibold text-slate-700 mt-1">Free / Varies</p><p class="text-slate-600 mt-2">A non-profit club offering free articles and short online courses on specific skills like high-altitude travel and conservation.</p><p class="mt-4 font-semibold text-slate-700">Best for: Free supplementary learning.</p></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="budget" class="py-16 md:py-24 bg-sky-mid">
+                    <div class="container mx-auto px-4"><div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-bold text-header-dark">Trip Budgeting</h2><p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">A visual cost comparison and an interactive planner to turn the dream into an itinerary.</p></div>
+                        <div class="grid lg:grid-cols-5 gap-8 items-start">
+                            <div class="lg:col-span-3 bg-white/70 p-6 rounded-lg shadow-md"><h3 class="text-2xl font-bold text-header-dark mb-4">Sample Trip Cost Comparison</h3><p class="text-slate-600 mb-6">Estimated total costs for popular beginner pathways, excluding major airfare. Highlights that non-course expenses are significant.</p><div class="chart-container"><canvas id="costChart"></canvas></div></div>
+                            <div class="lg:col-span-2 bg-header-dark/10 p-6 rounded-lg shadow-md"><h3 class="text-2xl font-bold text-header-dark mb-4">Interactive Budget Planner</h3><p class="text-slate-600 mb-6">Select a pathway to see a sample budget, then adjust the values for a custom estimate.</p><div><label for="budget-pathway" class="block text-sm font-medium text-slate-700">Select Pathway</label><select id="budget-pathway" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-dirt focus:border-dirt rounded-md"><option value="chamonix">European Classic (Chamonix, 5 Days)</option><option value="pnw">US Glacier School (PNW, 6 Days)</option><option value="colorado">Budget Club (Colorado, Season)</option></select></div><div class="mt-4 space-y-2"><div class="flex justify-between items-center"><label for="cost-course" class="text-slate-700">Course Fee (€)</label><input type="number" id="cost-course" class="w-28 text-right p-1 rounded border-gray-300"></div><div class="flex justify-between items-center"><label for="cost-accom" class="text-slate-700">Accommodation (€)</label><input type="number" id="cost-accom" class="w-28 text-right p-1 rounded border-gray-300"></div><div class="flex justify-between items-center"><label for="cost-food" class="text-slate-700">Food/Incidentals (€)</label><input type="number" id="cost-food" class="w-28 text-right p-1 rounded border-gray-300"></div><div class="flex justify-between items-center"><label for="cost-gear" class="text-slate-700">Gear/Lifts (€)</label><input type="number" id="cost-gear" class="w-28 text-right p-1 rounded border-gray-300"></div></div><div class="mt-4 pt-4 border-t border-header-dark/20"><div class="flex justify-between items-center text-xl font-bold"><span class="text-header-dark">Estimated Total:</span><span id="total-cost" class="text-dirt">€2300</span></div></div></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="finish" style="height: 100px;"></section>
+            </main>
+            <div id="progress-bar-container-wrapper" class="">
+                <div class="gpx-progress-container h-16 shadow-inner">
+                    <div class="relative w-full h-full container mx-auto px-4">
+                        <div class="gpx-elements">
+                            <svg id="gpx-path-svg" class="absolute top-0 left-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 60">
+                                <path id="gpx-path-base" d="M 50 50 l 15-2 l 10 3 l 15-7 l 10 7 l 15-3 l 10 2 l 15 0 L 250 20 L 265 30 l 15-5 l 10 8 l 15-8 l 10 3 l 15-5 l 20 8 l 15-3 L 450 25 L 465 35 l 15-8 l 10 5 l 15-10 l 10 8 l 15-3 L 600 15 L 615 25 l 15-5 l 10 8 l 15-3 l 10-5 l 15 8 l 15 0 L 800 10 L 815 20 l 15-5 l 10 8 l 15-3 l 10 5 l 15-8 l 10-2 l 15 8 L 1000 20 L 1015 30 l 15-8 l 10 5 l 15-3 l 10 8 l 15-5 l 60-5" stroke="#7f8c8d" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+                                <path id="gpx-path-progress" d="M 50 50 l 15-2 l 10 3 l 15-7 l 10 7 l 15-3 l 10 2 l 15 0 L 250 20 L 265 30 l 15-5 l 10 8 l 15-8 l 10 3 l 15-5 l 20 8 l 15-3 L 450 25 L 465 35 l 15-8 l 10 5 l 15-10 l 10 8 l 15-3 L 600 15 L 615 25 l 15-5 l 10 8 l 15-3 l 10-5 l 15 8 l 15 0 L 800 10 L 815 20 l 15-5 l 10 8 l 15-3 l 10 5 l 15-8 l 10-2 l 15 8 L 1000 20 L 1015 30 l 15-8 l 10 5 l 15-3 l 10 8 l 15-5 l 60-5" stroke="#A0522D" stroke-width="4" fill="none"/>
+                            </svg>
+                            <div id="gpx-labels" class="absolute w-full h-full top-0 left-0">
+                                 </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4 hidden"></div>
+    <div id="compare-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-60 z-50 flex items-start justify-center p-4 hidden"></div>
+    <div id="toast-notification" class="toast-notification fixed top-5 right-5 bg-terracotta text-white py-2 px-5 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50"></div>
+    <div id="compare-tray" class="compare-tray fixed bottom-0 left-0 right-0 bg-wood-panel text-header-dark p-4 shadow-2xl"><div class="container mx-auto flex justify-between items-center"><div><h4 class="font-bold text-lg">Compare Courses</h4><div id="compare-items" class="flex items-center space-x-2 mt-1"></div></div><div class="flex items-center space-x-4"><button id="compare-now-btn" class="accent-dirt text-white font-bold py-2 px-6 rounded-md hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed">Compare</button><button id="clear-compare-btn" class="text-sm text-slate-600 hover:text-header-dark">Clear</button></div></div></div>
+
+    <script type="module">
+        // 1. IMPORT your new modules at the top.
+        import slidesData from './assets/js/slideshow-data.js';
+        import { initSlideshow } from './assets/js/slideshow.js';
+
+        // 2. All of your original JavaScript code now lives inside this single DOMContentLoaded listener.
+        document.addEventListener('DOMContentLoaded', () => {
+            const courses = [
+                { id: 1, school: 'Compagnie des Guides', name: 'Beginner Course (3-Day)', location: 'Chamonix, France', region: 'europe', duration: 3, price: 630, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, regular sports activity.', curriculum: ['Rock climbing basics', 'Knot tying', 'Belaying', 'Rappelling', 'Glacier travel', 'Crampon/Ice axe use'], inclusions: ['Guide fees', 'Group safety gear'], exclusions: ['Accommodation', 'Lifts', 'Food', 'Personal gear', 'Insurance'] },
+                { id: 2, school: 'Compagnie des Guides', name: 'Beginner Course (5-Day)', location: 'Chamonix, France', region: 'europe', duration: 5, price: 1145, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, comfortable with multi-hour hikes.', curriculum: ['All 3-day skills', 'Crevasse rescue basics', 'Multi-pitch climbing intro', 'Night in a mountain hut'], inclusions: ['Guide fees', 'Group safety gear', 'Hut half-board'], exclusions: ['Valley accommodation', 'Lifts', 'Food (lunches)', 'Personal gear', 'Insurance'] },
+                { id: 6, school: 'Zermatters', name: 'Basic Course: Ice & Rock', location: 'Zermatt, Switzerland', region: 'europe', duration: 2, price: 500, currency: 'EUR', style: 'summit-goal', ratio: '1:6', fitness: 'Able to hike 4-5 hours at a steady pace.', curriculum: ['Glacier travel', 'Crampon/Ice axe use', 'Self-arrest', 'Basic rope work', 'Ascent of Breithorn (4164m)'], inclusions: ['Guide fees', 'Group gear', 'Lift pass'], exclusions: ['Accommodation', 'Food', 'Personal gear'] },
+                { id: 7, school: 'Mountain Guides Italy', name: 'BASIC Mountaineering', location: 'Dolomites, Italy', region: 'europe', duration: 3, price: 900, currency: 'EUR', style: 'rock-focus', ratio: '1:2', fitness: 'Very good fitness, comfortable on exposed terrain.', curriculum: ['Customizable', 'Rock climbing skills', 'Multi-pitch routes', 'Via ferrata techniques'], inclusions: ['Guide fees', 'Group gear'], exclusions: ['All accommodation', 'Food', 'Lifts', 'Client/guide expenses'] },
+                { id: 9, school: 'Colorado Mtn Club', name: 'Boulder Mtn School', location: 'Boulder, CO, USA', region: 'usa', duration: 90, price: 560, currency: 'EUR', style: 'budget-club', ratio: 'Varies', fitness: 'Must complete conditioning hikes (e.g., Green Mountain).', curriculum: ['Comprehensive curriculum over a season', 'Rock, Snow, and High-Altitude sections', 'Navigation', 'First aid'], inclusions: ['Instruction'], exclusions: ['All gear', 'Transportation', 'Park fees', 'CMC Membership'] },
+                { id: 10, school: 'Colorado Mtn School', name: 'Intro to Mountaineering', location: 'Estes Park, CO, USA', region: 'usa', duration: 2, price: 605, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Moderate fitness, able to hike for 5-8 hours with a pack.', curriculum: ['Self-arrest', 'Ice axe/crampon use', 'Glacier travel basics', 'Rope team travel', 'Basic knots'], inclusions: ['Guide fees', 'Group gear'], exclusions: ['Accommodation', 'Food', 'Personal gear', 'Park entry'] },
+                { id: 12, school: 'American Alpine Inst.', name: 'Alpinism 1', location: 'Mt. Baker, WA, USA', region: 'usa', duration: 6, price: 1700, currency: 'EUR', style: 'glacier-skills', ratio: '1:5', fitness: 'Excellent fitness, able to carry 40-50 lbs pack for many hours.', curriculum: ['Expedition camping', 'Glacier travel', 'Crevasse rescue', 'Ice climbing basics', 'Navigation', 'Snow anchors'], inclusions: ['Guide fees', 'Group gear', 'Food on mountain'], exclusions: ['Transportation', 'Hotel nights', 'Personal gear'] },
+                { id: 13, school: 'Mountain Madness', name: 'Alpine Climbing Course', location: 'North Cascades, WA', region: 'usa', duration: 8, price: 1860, currency: 'EUR', style: 'glacier-skills', ratio: '1:4', fitness: 'Excellent fitness, ability to carry a heavy pack is crucial.', curriculum: ['All AAI skills plus', 'Advanced crevasse rescue', 'Multi-pitch rock/alpine ice climbing'], inclusions: ['Guide fees', 'Group gear', 'All food on mountain'], exclusions: ['Transportation', 'Hotels', 'Personal gear'] },
+                { id: 15, school: 'Japan Outdoor Inst.', name: 'Mountaineering LVL 1', location: 'Yatsugatake, Japan', region: 'japan', duration: 2, price: 375, currency: 'EUR', style: 'all-round', ratio: '1:5', fitness: 'Good hiking fitness, comfortable with 6-8 hour days.', curriculum: ['Map/compass navigation', 'Basic rope work', 'Mountain weather', 'Trip planning', 'Scrambling on rock'], inclusions: ['Instruction', 'Group gear'], exclusions: ['Lodge fees (~€75/night)', 'Food', 'Transportation', 'Insurance'] }
+            ];
+
+            const courseListEl = document.getElementById('course-list');
+            const noResultsEl = document.getElementById('no-results');
+            const filters = Array.from(document.querySelectorAll('#courses select'));
+            let comparisonList = [];
+
+            function renderCourses() {
+                const values = filters.map(f => f.value);
+                const filtered = courses.filter(c =>(values[0] === 'all' || c.region === values[0]) &&(values[1] === 'all' || c.style === values[1]) &&(values[2] === 'all' || (values[2] === '1-3' && c.duration <= 3) || (values[2] === '4-6' && c.duration >= 4 && c.duration <= 6) || (values[2] === '7+' && c.duration >= 7)) &&(values[3] === 'all' || c.price <= parseInt(values[3])));
+                courseListEl.innerHTML = '';
+                noResultsEl.classList.toggle('hidden', filtered.length > 0);
+                filtered.forEach(course => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white border border-slate-200 rounded-lg shadow-md p-6 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300';
+                    const isAdded = comparisonList.includes(course.id);
+                    const isFull = !isAdded && comparisonList.length >= 3;
+                    card.innerHTML = `<div><h3 class="text-xl font-bold text-navy-dark">${course.name}</h3><p class="text-slate-600 text-sm font-medium">${course.school}</p><p class="text-slate-500 text-sm mt-1">${course.location}</p></div><div class="mt-4 flex-grow"><span class="inline-block bg-navy-dark/10 text-navy-dark text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${course.duration > 89 ? 'Season' : course.duration + ' Days'}</span><span class="inline-block bg-dirt/10 text-dirt text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${course.style.replace('-', ' ')}</span></div><div class="mt-4 pt-4 border-t border-slate-200 flex justify-between items-center"><span class="text-2xl font-bold text-navy-dark">€${course.price.toLocaleString()}</span><div class="flex space-x-2"><button class="btn-details text-sm text-navy-dark font-semibold hover:text-dirt" data-id="${course.id}">Details</button><button class="btn-compare text-sm text-white font-semibold py-1 px-3 rounded transition-colors ${isAdded ? 'added' : isFull ? 'full' : 'accent-dirt hover:bg-opacity-90'}" data-id="${course.id}" ${isFull ? 'disabled' : ''}>${isAdded ? '✓ Added' : 'Compare'}</button></div></div>`;
+                    courseListEl.appendChild(card);
+                });
+            }
+
+            const detailsModal = document.getElementById('details-modal');
+            const compareModal = document.getElementById('compare-modal');
+            function openDetailsModal(courseId) {
+                const course = courses.find(c => c.id === courseId);
+                if (!course) return;
+                detailsModal.innerHTML = `<div class="modal-content bg-wood-panel rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto transform scale-95 p-6 text-header-dark"><div class="flex justify-between items-start mb-4"><h2 class="text-2xl md:text-3xl font-bold">${course.name}</h2><button class="btn-close-modal text-3xl hover:text-white">&times;</button></div><div class="flex border-b border-yellow-800/20 mb-4"><button class="modal-tab p-4 font-semibold active" data-tab="overview">Overview</button><button class="modal-tab p-4 font-semibold" data-tab="curriculum">Curriculum</button><button class="modal-tab p-4 font-semibold" data-tab="reviews">Reviews</button><button class="modal-tab p-4 font-semibold" data-tab="prereqs">Prerequisites</button></div><div id="modal-tab-content"></div></div>`;
+                
+                const modalTabContent = detailsModal.querySelector('#modal-tab-content');
+
+                const tabContents = {
+                    overview: `<div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center my-6"><div class="bg-stone/50 p-3 rounded-lg shadow-sm"><div class="text-xs text-header-dark/80">Price</div><div class="font-bold text-lg text-header-dark">€${course.price}</div></div><div class="bg-stone/50 p-3 rounded-lg shadow-sm"><div class="text-xs text-header-dark/80">Duration</div><div class="font-bold text-lg text-header-dark">${course.duration > 89 ? 'Season' : course.duration + ' Days'}</div></div><div class="bg-stone/50 p-3 rounded-lg shadow-sm"><div class="text-xs text-header-dark/80">Ratio</div><div class="font-bold text-lg text-header-dark">${course.ratio}</div></div><div class="bg-stone/50 p-3 rounded-lg shadow-sm"><div class="text-xs text-header-dark/80">Style</div><div class="font-bold text-lg text-header-dark capitalize">${course.style.replace('-', ' ')}</div></div></div><div class="grid md:grid-cols-2 gap-6 mt-6"><div><h3 class="text-xl font-bold border-b border-yellow-800/20 pb-2 mb-3">✅ What's Included</h3><ul class="list-disc list-inside space-y-1">${course.inclusions.map(item => `<li>${item}</li>`).join('')}</ul></div><div><h3 class="text-xl font-bold border-b border-yellow-800/20 pb-2 mb-3">❌ What You Provide</h3><ul class="list-disc list-inside space-y-1">${course.exclusions.map(item => `<li>${item}</li>`).join('')}</ul></div></div>`,
+                    curriculum: `<div class="prose max-w-none prose-headings:text-header-dark prose-li:text-header-dark/90"><h3 class="text-xl font-bold mb-3">Detailed Itinerary</h3><ul class="list-disc list-inside space-y-2">${course.curriculum.map(item => `<li>${item}</li>`).join('')}</ul></div>`,
+                    reviews: `<div class="prose max-w-none prose-headings:text-header-dark prose-p:text-header-dark/90"><h3 class="text-xl font-bold mb-3">Participant Feedback</h3><blockquote class="border-l-4 border-dirt pl-4 italic">"An incredible experience. The guides were extremely knowledgeable and patient, especially with beginners. I felt safe the entire time."</blockquote><p class="mt-4">Summary: Consistently praised for professional, safety-conscious guides who create a positive learning environment. The comprehensive curriculum is a major plus for those serious about building a strong skill set.</p></div>`,
+                    prereqs: `<div class="prose max-w-none prose-headings:text-header-dark prose-p:text-header-dark/90"><h3 class="text-xl font-bold mb-3">Fitness & Experience</h3><p class="bg-stone/50 p-4 rounded-lg shadow-sm">${course.fitness}</p></div>`
+                };
+
+                function switchModalTab(tabName) {
+                    modalTabContent.innerHTML = tabContents[tabName];
+                    detailsModal.querySelectorAll('.modal-tab').forEach(t => {
+                        t.classList.remove('active', 'text-dirt', 'border-dirt');
+                        t.classList.add('hover:text-dirt');
+                    });
+                    const activeTab = detailsModal.querySelector(`.modal-tab[data-tab="${tabName}"]`);
+                    activeTab.classList.add('active', 'text-dirt', 'border-dirt');
+                    activeTab.classList.remove('hover:text-dirt');
+                }
+                
+                detailsModal.querySelectorAll('.modal-tab').forEach(tab => {
+                    tab.addEventListener('click', () => switchModalTab(tab.dataset.tab));
+                });
+
+                switchModalTab('overview');
+                detailsModal.classList.remove('hidden'); document.body.style.overflow = 'hidden';
+            }
+            function openCompareModal() {
+                 if (comparisonList.length < 2) return;
+                 const selected = comparisonList.map(id => courses.find(c => c.id === id));
+                 const allSkills = [...new Set(selected.flatMap(c => c.curriculum))];
+                 let tableHTML = `<div class="modal-content bg-wood-panel rounded-lg shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-y-auto transform scale-95 mt-8 p-4 sm:p-6"><div class="flex justify-between items-center mb-4"><h2 class="text-2xl md:text-3xl font-bold text-header-dark">Course Comparison</h2><button class="btn-close-modal text-3xl text-slate-500 hover:text-white">&times;</button></div><div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="bg-header-dark/10"><th class="p-3 font-semibold text-header-dark">Feature</th>${selected.map(c => `<th class="p-3 font-semibold text-header-dark">${c.name}</th>`).join('')}</tr></thead><tbody><tr class="border-b border-yellow-800/20"><td class="p-3 font-semibold">Price</td>${selected.map(c => `<td class="p-3">€${c.price}</td>`).join('')}</tr><tr class="border-b border-yellow-800/20"><td class="p-3 font-semibold">Duration</td>${selected.map(c => `<td class="p-3">${c.duration > 89 ? 'Season' : c.duration + ' Days'}</td>`).join('')}</tr><tr class="border-b border-yellow-800/20"><td class="p-3 font-semibold">Ratio</td>${selected.map(c => `<td class="p-3">${c.ratio}</td>`).join('')}</tr><tr class="border-b border-yellow-800/20"><td class="p-3 font-semibold">Key Skills</td>${selected.map(c => `<td class="p-3 text-xs">${c.curriculum.slice(0,3).join(', ')}...</td>`).join('')}</tr></tbody></table></div></div>`;
+                 compareModal.innerHTML = tableHTML; compareModal.classList.remove('hidden'); document.body.style.overflow = 'hidden';
+            }
+
+            const toastEl = document.getElementById('toast-notification');
+            function showToast(message) { toastEl.textContent = message; toastEl.classList.remove('opacity-0'); setTimeout(() => toastEl.classList.add('opacity-0'), 3000); }
+            function toggleCompare(courseId) {
+                const index = comparisonList.indexOf(courseId);
+                if (index > -1) { comparisonList.splice(index, 1); } else { if (comparisonList.length < 3) { comparisonList.push(courseId); } else { showToast("Max 3 courses to compare."); } }
+                renderCourses(); updateCompareTray();
+            }
+
+            const compareTray = document.getElementById('compare-tray');
+            const compareItemsContainer = document.getElementById('compare-items');
+            function updateCompareTray() {
+                compareTray.classList.toggle('show', comparisonList.length > 0);
+                compareItemsContainer.innerHTML = comparisonList.map(id => `<div class="bg-stone text-header-dark text-sm font-semibold px-2 py-1 rounded">${courses.find(c=>c.id===id).school}</div>`).join('');
+                document.getElementById('compare-now-btn').disabled = comparisonList.length < 2;
+            }
+            function clearCompare() { comparisonList = []; renderCourses(); updateCompareTray(); }
+
+            courseListEl.addEventListener('click', (e) => { if (e.target.matches('.btn-details')) openDetailsModal(parseInt(e.target.dataset.id)); if (e.target.matches('.btn-compare')) toggleCompare(parseInt(e.target.dataset.id)); });
+            function closeModal(modal) { modal.classList.add('hidden'); document.body.style.overflow = ''; }
+            detailsModal.addEventListener('click', (e) => { if (e.target.matches('.btn-close-modal') || e.target.classList.contains('modal-overlay')) closeModal(detailsModal); });
+            compareModal.addEventListener('click', (e) => { if (e.target.matches('.btn-close-modal') || e.target.classList.contains('modal-overlay')) closeModal(compareModal); });
+            document.getElementById('compare-now-btn').addEventListener('click', openCompareModal);
+            document.getElementById('clear-compare-btn').addEventListener('click', clearCompare);
+            filters.forEach(filter => filter.addEventListener('change', renderCourses));
+
+            const tabs = document.querySelectorAll('.tab');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            tabs.forEach(tab => tab.addEventListener('click', () => { tabs.forEach(t => t.classList.remove('active')); tab.classList.add('active'); tabPanes.forEach(p => p.classList.toggle('hidden', p.id !== `${tab.dataset.tab}-content`)); }));
+
+            const costChart = new Chart(document.getElementById('costChart').getContext('2d'), { type: 'bar', data: { labels: ['European Classic (Chamonix)', 'US Glacier School (PNW)', 'Budget Club (Colorado)'], datasets: [{ label: 'Estimated Trip Cost (€)', data: [2300, 2400, 930], backgroundColor: ['#2F4F4F', '#A0522D', '#7f8c8d'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `Est. Total: ${new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(c.parsed.y)}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => '€' + v.toLocaleString() } } } } });
+
+            const budgetPathway = document.getElementById('budget-pathway');
+            const budgetInputs = { course: document.getElementById('cost-course'), accom: document.getElementById('cost-accom'), food: document.getElementById('cost-food'), gear: document.getElementById('cost-gear') };
+            const budgetData = { chamonix: { course: 1145, accom: 600, food: 300, gear: 250 }, pnw: { course: 1700, accom: 280, food: 230, gear: 185 }, colorado: { course: 560, accom: 0, food: 185, gear: 185 } };
+            const totalCostEl = document.getElementById('total-cost');
+            function calculateTotal() { const total = Object.values(budgetInputs).reduce((s, i) => s + (Number(i.value) || 0), 0); totalCostEl.textContent = '€' + total.toLocaleString(); }
+            function updateCalculator() { Object.assign(budgetInputs, Object.fromEntries(Object.entries(budgetData[budgetPathway.value]).map(([k,v]) => [k, (budgetInputs[k].value=v, budgetInputs[k])]))); calculateTotal(); }
+            budgetPathway.addEventListener('change', updateCalculator);
+            Object.values(budgetInputs).forEach(input => input.addEventListener('input', calculateTotal));
+
+            const header = document.querySelector('header');
+            header.addEventListener('click', (e) => {
+                // Find the closest parent that is an action button
+                const actionButton = e.target.closest('.action-button');
+                
+                // If the click was not on an action button, do nothing
+                if (!actionButton) return;
+
+                // Handle the click based on the button's ID
+                switch (actionButton.id) {
+                    case 'list':
+                        window.location.href = './list/'; // Navigate to the list page
+                        break;
+                    case 'dossier':
+                        switchPage('dossier'); // Navigate to the dossier page
+                        break;
+                    case 'plan':
+                        switchPage('plan'); // Use existing function to switch to the plan view
+                        break;
+                }
+            });
+
+            const textPanel = document.getElementById('hero-text-panel');
+            const normalButtonWrapper = document.getElementById('hero-normal-button');
+            const floatingButtonWrapper = document.getElementById('hero-floating-button-wrapper');
+            const floatingButtonLink = document.getElementById('hero-floating-button-link');
+            let isFloatingActive = false; // Tracks if the floating button is currently visible/active
+
+            function handleHeroButtonVisibility() {
+                // Only run this logic if we are on the journey page
+                if(document.getElementById('journey-page').classList.contains('hidden')) return;
+                
+                const panelRect = textPanel.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+
+                // Condition for floating: text panel is taller than viewport AND
+                // the bottom of the text panel is still within or below the viewport.
+                const shouldBeFloating = panelRect.height > viewportHeight && panelRect.bottom > 0;
+
+                if (shouldBeFloating) { // Content is long and we are within the scrollable range of the hero section
+                    normalButtonWrapper.classList.add('hidden'); // Hide the normal button
+                    floatingButtonWrapper.classList.remove('hidden'); // Show the floating wrapper
+                    
+                    // Now, manage the transition of the actual link
+                    if (!isFloatingActive) {
+                        floatingButtonWrapper.classList.add('active-floating'); // Set fixed positioning
+                        floatingButtonLink.classList.add('show'); // Animate into view
+                        isFloatingActive = true;
+                    }
+                    
+                    // Calculate opacity based on scroll progress within the textPanel
+                    // progress = 0 when textPanel top is at viewport top
+                    // progress = 1 when textPanel bottom is at viewport bottom
+                    const scrollProgress = Math.min(1, Math.max(0, (panelRect.top * -1) / (panelRect.height - viewportHeight)));
+                    // Opacity ranges from 0.2 when just entering the floating state, to 1.0 when fully scrolled through
+                    const newOpacity = 0.2 + (scrollProgress * 0.8);
+                    floatingButtonLink.style.opacity = newOpacity; // Directly control opacity for fading effect
+                    
+                } else { // Content is short OR we have scrolled past the hero section
+                    normalButtonWrapper.classList.remove('hidden'); // Show the normal button
+                    
+                    if (isFloatingActive) {
+                        // If it was floating, animate it out
+                        floatingButtonLink.classList.remove('show'); // Animate out of view
+                        // After animation, hide the wrapper completely
+                        setTimeout(() => {
+                            floatingButtonWrapper.classList.add('hidden');
+                            floatingButtonWrapper.classList.remove('active-floating'); // Remove fixed positioning
+                            floatingButtonLink.style.opacity = 0; // Reset opacity
+                        }, 300); // Match CSS transition duration
+                        isFloatingActive = false;
+                    } else {
+                        floatingButtonWrapper.classList.add('hidden'); // Ensure it's hidden if not active
+                        floatingButtonWrapper.classList.remove('active-floating'); // Ensure not fixed
+                    }
+                }
+            }
+            
+            // The call to render the initial slide is now handled inside initSlideshow.
+
+            const heroNormalButton = document.getElementById('hero-normal-button');
+            const heroStickyButton = document.getElementById('hero-floating-button-wrapper');
+            
+            function handleHeroButtonVisibilityOriginal() { // Renamed for clarity, original logic
+                if(document.getElementById('journey-page').classList.contains('hidden')) return;
+                
+                const panelHeight = textPanel.offsetHeight;
+                const viewportHeight = window.innerHeight;
+            
+                if (panelHeight > viewportHeight) { // Scenario 2
+                    heroNormalButton.classList.add('hidden');
+                    heroStickyButton.classList.remove('hidden'); // This now controls our new floating wrapper
+                } else { // Scenario 1
+                    heroNormalButton.classList.remove('hidden');
+                    heroStickyButton.classList.add('hidden');
+                }
+                // Call the new adaptive visibility logic
+                handleHeroButtonVisibility();
+            }
+
+            // Replace existing calls to handleHeroButtonVisibility with the new one
+            // window.removeEventListener('scroll', handleHeroButtonVisibility); // Removed direct references from the original script to avoid re-adding
+            // window.removeEventListener('resize', handleHeroButtonVisibility);
+
+            window.addEventListener('scroll', handleHeroButtonVisibilityOriginal);
+            window.addEventListener('resize', handleHeroButtonVisibilityOriginal);
+            handleHeroButtonVisibilityOriginal(); // Initial call
+        });
+    </script>
+</body>
+</html>
+<!-- <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mountaineering Plan: An Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏔️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #F8F9FA;
+        }
+        body.plan-active {
+            padding-bottom: 4rem; /* Add space for the bottom bar only on plan page */
+        }
+        /* Earth & Sky Theme */
+        .bg-header { background-color: #F8F9FA; }
+        .text-header-dark { color: #2F4F4F; }
+        .bg-sky-light { background-color: #F0F8FF; }
+        .bg-sky-mid { background-color: #E6F7FF; }
+        .accent-dirt { background-color: #A0522D; }
+        .text-dirt { color: #A0522D; }
+        .border-dirt { border-color: #A0522D; }
+        .bg-wood-panel {
+            background-color: #DEB887;
+            background-image: linear-gradient(45deg, rgba(0,0,0,0.05) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.05) 75%, rgba(0,0,0,0.05)), linear-gradient(-45deg, rgba(0,0,0,0.05) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.05) 75%, rgba(0,0,0,0.05));
+            background-size: 20px 20px;
+        }
+
+        .hero-layered {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #a1c4fd 0%, #c2e9fb 100%); 
+        }
+        
+        .gpx-progress-container { 
+            position: fixed; 
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 49; 
+            background-color: rgba(85, 107, 47, 0.9);
+            backdrop-filter: blur(4px);
+        }
+
+        #gpx-path-progress { transition: stroke-dashoffset: 0.5s ease-in-out; }
+        .gpx-label {
+            position: absolute;
+            bottom: 4px;
+            transform: translateX(-50%);
+            transition: color 0.5s ease-in-out; 
+            color: rgba(248, 249, 250, 0.7);
+            white-space: nowrap;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .gpx-label-active { color: white !important; text-shadow: 0 0 5px rgba(160, 82, 45, 0.7); }
+
+        .nav-tab.active { color: #A0522D; border-bottom-color: #A0522D; }
+        .mobile-tab-active {
+            background-color: rgba(71, 85, 105, 0.1); /* A light gray to show selection */
+            font-weight: 600;
+            color: #2F4F4F; /* Dark Slate Gray for contrast */
+        }
+
+        .chart-container { position: relative; margin: auto; height: 40vh; width: 100%; max-width: 800px; max-height: 400px; }
+        .tab.active { border-color: #A0522D; background-color: #F8F9FA; color: #A0522D; }
+        .modal-overlay, .toast-notification { transition: opacity 0.3s ease-in-out; pointer-events: none;}
+        .modal-content { transition: transform 0.3s ease-in-out; }
+        .compare-tray { 
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transition: transform 0.3s ease-in-out; 
+            transform: translateY(100%);
+            z-index: 51;
+        }
+        .compare-tray.show { transform: translateY(0); }
+        .btn-compare.added { background-color: #27ae60; color: white; }
+        .btn-compare.added:hover { background-color: #2ecc71; }
+        .btn-compare.full { background-color: #7f8c8d; cursor: not-allowed; }
+        
+        .slideshow-container {
+            position: relative;
+            height: 100vh;
+            background-color: #2c3e50;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .slide-text {
+            color: white;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 0.5rem;
+            max-width: 80%;
+        }
+        .story-link {
+            animation: bounce 2s infinite;
+        }
+        .action-link {
+            animation: bounce 2.5s infinite;
+            text-shadow: 0px 1px 3px rgba(0,0,0,0.5);
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
     </style>
 </head>
 <body class="bg-sky-light text-slate-800 antialiased">
@@ -678,3 +1273,4 @@
     </script>
 </body>
 </html>
+ -->
