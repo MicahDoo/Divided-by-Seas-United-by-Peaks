@@ -217,7 +217,7 @@
                         </div>
                     </div>
                     <div id="storyButtonContainer">
-                        <a href="#my-story" id="story-button" class="story-button inline-flex flex-col items-center text-header-dark hover:text-dirt transition">
+                        <a href="#my-story" id="story-button" class="story-button sticky inline-flex flex-col items-center text-header-dark hover:text-dirt transition">
                             <span class="text-sm font-semibold">See My Story</span>
                             <span class="text-2xl">↓</span>
                         </a>
@@ -487,24 +487,24 @@
             });
 
             const textPanel = document.getElementById('hero-text-panel');
-            const normalButton = document.getElementById('hero-normal-button');
-            const stickyButton = document.getElementById('hero-sticky-button');
+            // const normalButton = document.getElementById('hero-normal-button');
+            // const stickyButton = document.getElementById('hero-sticky-button');
             
-            function handleHeroButtonVisibility() {
-                if(document.getElementById('journey-page').classList.contains('hidden')) return;
+            // function handleHeroButtonVisibility() {
+            //     if(document.getElementById('journey-page').classList.contains('hidden')) return;
                 
-                const panelHeight = textPanel.offsetHeight;
-                const viewportHeight = window.innerHeight;
+            //     const panelHeight = textPanel.offsetHeight;
+            //     const viewportHeight = window.innerHeight;
             
-                if (panelHeight > viewportHeight) { // Scenario 2
-                    normalButton.classList.add('hidden');
-                    stickyButton.classList.remove('hidden');
-                    updateStickyButtonOpacity();
-                } else { // Scenario 1
-                    normalButton.classList.remove('hidden');
-                    stickyButton.classList.add('hidden');
-                }
-            }
+            //     if (panelHeight > viewportHeight) { // Scenario 2
+            //         normalButton.classList.add('hidden');
+            //         stickyButton.classList.remove('hidden');
+            //         updateStickyButtonOpacity();
+            //     } else { // Scenario 1
+            //         normalButton.classList.remove('hidden');
+            //         stickyButton.classList.add('hidden');
+            //     }
+            // }
             
             function updateStickyButtonOpacity() {
                 const scrollPosition = window.scrollY;
@@ -521,7 +521,7 @@
             
             window.addEventListener('scroll', handleHeroButtonVisibility);
             window.addEventListener('resize', handleHeroButtonVisibility);
-            handleHeroButtonVisibility();
+            // handleHeroButtonVisibility();
             
             // Page Navigation Logic
             const navTabs = document.querySelectorAll('.nav-tab, #mobile-menu button, #main-logo');
