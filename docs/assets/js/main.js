@@ -1,14 +1,17 @@
-// Import all modules
 import { Navigation } from './modules/navigation.js';
 import { CourseManager } from './modules/courses.js';
 import { UIEffects } from './modules/ui-effects.js';
 import { ChartManager } from './modules/charts.js';
+import { BudgetCalculator } from './modules/budget.js';
+import { ModalManager } from './modules/modals.js';
+import { TabManager } from './modules/tabs.js';
+import { LanguageManager } from './modules/language.js';
 import { initSlideshow } from './slideshow.js';
 import slidesData from './slideshow-data.js';
-import { coursesData } from './data/courses-data.js';
+import { coursesData } from './data/courses.js';
+import { langData } from './data/language.js';
 
-// Application initialization
-class App {
+export class App {
     constructor() {
         this.modules = {};
         this.init();
@@ -16,49 +19,69 @@ class App {
     
     async init() {
         try {
-            // Wait for DOM to be ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => this.initializeModules());
-            } else {
-                this.initializeModules();
-            }
-        } catch (error) {
-            console.error('Failed to initialize app:', error);
-            this.showErrorMessage();
-        }
-    }
-    
-    initializeModules() {
-        try {
-            // Initialize modules in dependency order
+            // Initialize core modules
             this.modules.navigation = new Navigation();
-            this.modules.courseManager = new CourseManager(coursesData);
+            this.modules.modalManager = new ModalManager();
+            this.modules.tabManager = new TabManager();
             this.modules.uiEffects = new UIEffects();
-            this.modules.chartManager = new ChartManager();
             
-            // Initialize slideshow with navigation callback
+            // Initialize page-specific modules
+            await this.initPageModules();
+            
+            // Initialize slideshow
             initSlideshow(slidesData, (page) => this.modules.navigation.switchPage(page));
             
-            // Set initial state
+            // Set initial page
             this.modules.navigation.switchPage('journey');
             
-            console.log('✅ All modules initialized successfully');
+            console.log('Application initialized successfully');
         } catch (error) {
-            console.error('❌ Module initialization failed:', error);
-            this.showErrorMessage();
+            console.error('Failed to initialize application:', error);
+            this.showErrorMessage('Failed to load the application. Please refresh the page.');
         }
     }
     
-    showErrorMessage() {
+    async initPageModules() {
+        // Plan page modules
+        if (DOM.findById('plan-page')) {
+            this.modules.courseManager = new CourseManager(coursesData);
+            this.modules.budgetCalculator = new BudgetCalculator();
+        }
+        
+        // Dossier page modules
+        if (DOM.findById('dossier-page')) {
+            this.modules.chartManager = new ChartManager();
+            this.modules.languageManager = new LanguageManager(langData, this.modules.chartManager);
+        }
+        
+        // List page modules (if on list page)
+        if (DOM.findById('comparison-chart')) {
+            this.modules.chartManager = new ChartManager();
+        }
+    }
+    
+    showErrorMessage(message) {
         const errorDiv = document.createElement('div');
-        errorDiv.className = 'fixed top-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
-        errorDiv.innerHTML = `
-            <strong>Something went wrong!</strong>
-            <span class="block sm:inline"> Please refresh the page. If the problem persists, try clearing your browser cache.</span>
-        `;
+        errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50';
+        errorDiv.textContent = message;
         document.body.appendChild(errorDiv);
+        
+        setTimeout(() => {
+            errorDiv.remove();
+        }, 5000);
+    }
+    
+    destroy() {
+        // Clean up all modules
+        Object.values(this.modules).forEach(module => {
+            if (module.destroy) {
+                module.destroy();
+            }
+        });
     }
 }
 
-// Start the application
-new App();
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.app = new App();
+});
