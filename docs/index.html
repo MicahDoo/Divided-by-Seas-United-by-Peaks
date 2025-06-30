@@ -705,34 +705,142 @@
         });
     </script> -->
     <script type="module">
+        // Import all modules
         import { Navigation } from './assets/js/modules/navigation.js';
         import { CourseManager } from './assets/js/modules/courses.js';
         import { UIEffects } from './assets/js/modules/ui-effects.js';
+        import { ChartManager } from './assets/js/modules/charts.js';
+        import { BudgetCalculator } from './assets/js/modules/budget.js';
+        import { ModalManager } from './assets/js/modules/modals.js';
+        import { TabManager } from './assets/js/modules/tabs.js';
+        import { LanguageManager } from './assets/js/modules/language.js';
         import { initSlideshow } from './assets/js/slideshow.js';
         import slidesData from './assets/js/slideshow-data.js';
-        import coursesData from './assets/js/data/courses.js';
+        import { coursesData } from './assets/js/data/courses.js';
+        import { langData } from './assets/js/data/language.js';
+        import { ErrorHandler } from './assets/js/utils/error-handler.js';
+        import { DOM } from './assets/js/utils/dom-helpers.js';
     
-        document.addEventListener('DOMContentLoaded', () => {
+        // Application state
+        const app = {
+            modules: {},
+            initialized: false
+        };
+    
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Initialize core modules
-                const navigation = new Navigation();
-                const courseManager = new CourseManager(coursesData); // You'll need to move coursesData to a separate file
-                const uiEffects = new UIEffects();
+                console.log('Initializing application...');
                 
-                // Initialize slideshow
-                initSlideshow(slidesData, (page) => navigation.switchPage(page));
+                // Core modules that work on all pages
+                app.modules.modalManager = new ModalManager();
+                app.modules.tabManager = new TabManager();
+                app.modules.navigation = new Navigation();
+                app.modules.uiEffects = new UIEffects();
                 
-                // Set initial page
-                navigation.switchPage('journey');
-                courseManager.renderCourses();
-                courseManager.updateCalculator();
+                // Page-specific modules
+                await initializePageModules();
                 
+                // Initialize slideshow with navigation callback
+                initSlideshow(slidesData, (page) => {
+                    if (app.modules.navigation) {
+                        app.modules.navigation.switchPage(page);
+                    }
+                });
+                
+                // Set initial page state
+                if (app.modules.navigation) {
+                    app.modules.navigation.switchPage('journey');
+                }
+                
+                // Initialize charts and budget calculator
+                initializeInteractiveElements();
+                
+                app.initialized = true;
                 console.log('Application initialized successfully');
+                
             } catch (error) {
-                console.error('Failed to initialize application:', error);
-                // Could show user-friendly error message
+                ErrorHandler.handle(error, 'Application Initialization');
+                showErrorMessage('Failed to load the application. Please refresh the page.');
             }
         });
+    
+        async function initializePageModules() {
+            // Plan page modules
+            if (DOM.findById('plan-page')) {
+                app.modules.courseManager = new CourseManager(coursesData);
+                app.modules.budgetCalculator = new BudgetCalculator();
+            }
+            
+            // Dossier page modules  
+            if (DOM.findById('dossier-page')) {
+                app.modules.languageManager = new LanguageManager(langData);
+            }
+            
+            // Chart manager for any page that has charts
+            const chartElements = DOM.findAll('canvas[id$="Chart"]');
+            if (chartElements.length > 0) {
+                app.modules.chartManager = new ChartManager();
+                
+                // Connect language manager to charts if both exist
+                if (app.modules.languageManager) {
+                    app.modules.languageManager.setChartManager(app.modules.chartManager);
+                }
+            }
+        }
+    
+        function initializeInteractiveElements() {
+            // Tab system initialization
+            const tabs = DOM.findAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    if (app.modules.tabManager) {
+                        app.modules.tabManager.switchTab(tab);
+                    }
+                });
+            });
+            
+            // Set initial active tab
+            const firstActiveTab = DOM.findAll('.tab.active')[0];
+            if (firstActiveTab && app.modules.tabManager) {
+                app.modules.tabManager.switchTab(firstActiveTab);
+            }
+            
+            // Modal setup
+            if (app.modules.modalManager) {
+                app.modules.modalManager.setupModalTriggers();
+            }
+            
+            // Close modals on click outside
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay') && app.modules.modalManager) {
+                    const modal = e.target;
+                    app.modules.modalManager.closeModal(modal);
+                }
+            });
+        }
+    
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+    
+        // Global error handler
+        window.addEventListener('error', (event) => {
+            ErrorHandler.handle(event.error, 'Global Error');
+        });
+    
+        window.addEventListener('unhandledrejection', (event) => {
+            ErrorHandler.handle(event.reason, 'Unhandled Promise Rejection');
+        });
+    
+        // Expose app instance for debugging
+        window.app = app;
     </script>
 </body>
 </html>
