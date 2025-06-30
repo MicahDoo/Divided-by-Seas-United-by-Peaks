@@ -46,7 +46,7 @@ export class Navigation {
         // Toggle page visibility
         this.pages.forEach(page => {
             const shouldShow = page.id === `${requestedPage}-page`;
-            DOM.toggle(page, 'hidden', !shouldShow);
+            DOM.toggle(page, 'hidden', shouldShow);
         });
         
         // Update body class
