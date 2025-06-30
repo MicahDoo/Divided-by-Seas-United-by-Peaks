@@ -1,11 +1,14 @@
 // docs/js/menu.js
 
-/**
- * A private function within this module to handle the menu's state.
- */
+// This is the function that the slideshow will call. It's the module's "public API".
+export function openMenuForActions() {
+    setMenuState(true);
+}
+
+// A private function to handle the menu's state. It is not exported.
 function setMenuState(shouldBeOpen) {
     const mobileMenu = document.getElementById('mobile-menu');
-    if (!mobileMenu) return; // Failsafe if the menu element isn't on the page
+    if (!mobileMenu) return;
 
     if (shouldBeOpen) {
         mobileMenu.classList.remove('hidden');
@@ -16,30 +19,20 @@ function setMenuState(shouldBeOpen) {
     }
 }
 
-/**
- * A private function to set up the button click listener.
- */
-function initializeMenuButton() {
+// A private function that sets up the click handler for the hamburger icon.
+function initializeMenuButtonListener() {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
 
     if (mobileMenuButton && mobileMenu) {
         mobileMenuButton.addEventListener('click', () => {
-            // On click, simply check if the menu is currently hidden and do the opposite.
             const isHidden = mobileMenu.classList.contains('hidden');
             setMenuState(isHidden);
         });
     }
 }
 
-/**
- * The only function that needs to be exported.
- * Other modules will call this to automatically open the menu.
- */
-export function openMenuForActions() {
-    setMenuState(true);
-}
-
-// This line ensures that the hamburger button click listener is
-// set up as soon as the page structure is loaded.
-initializeMenuButton();
+// THIS IS THE KEY: We wait for the entire HTML document to be loaded and parsed
+// before we try to find the button and attach our click listener.
+// This guarantees the button will exist when the code runs.
+document.addEventListener('DOMContentLoaded', initializeMenuButtonListener);
