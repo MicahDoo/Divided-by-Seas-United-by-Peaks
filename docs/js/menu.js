@@ -9,6 +9,7 @@ export function openMenuForActions() {
 function setMenuState(shouldBeOpen) {
     const mobileMenu = document.getElementById('mobile-menu');
     if (!mobileMenu) return;
+    console.log(`[Menu State] Trying to set menu state to: ${shouldBeOpen ? 'OPEN' : 'CLOSED'}`);
 
     if (shouldBeOpen) {
         mobileMenu.classList.remove('hidden');
