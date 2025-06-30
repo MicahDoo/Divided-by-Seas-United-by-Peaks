@@ -1,3 +1,5 @@
+import { setMenuState } from './menu.js';
+
 export function initSlideshow(slides, switchPage) {
     let currentSlide = 0;
     const slideshowContainer = document.getElementById('slideshow');
