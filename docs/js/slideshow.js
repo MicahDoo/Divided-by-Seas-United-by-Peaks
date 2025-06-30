@@ -1,4 +1,4 @@
-import { setMenuState } from './menu.js';
+import { openMenuForActions } from './menu.js';
 
 export function initSlideshow(slides, switchPage) {
     let currentSlide = 0;
@@ -67,8 +67,9 @@ export function initSlideshow(slides, switchPage) {
     
         // If it's the last slide, request the menu to be opened.
         // This no longer uses the global 'window' object.
+        const isLastSlideWithActions = currentSlide === slides.length - 1 && slides[currentSlide].actions;
         if (isLastSlideWithActions) {
-            setMenuState(true);
+            openMenuForActions(); // Use the new, more specific function
         }
         
         updateArrowButtons();
