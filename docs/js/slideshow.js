@@ -62,24 +62,13 @@ export function initSlideshow(slides, switchPage) {
         });
 
         // Handle mobile menu visibility
-        // Clear any pending hide timeout for the mobile menu
-        if (hideTimeouts.has(mobileMenu)) {
-            clearTimeout(hideTimeouts.get(mobileMenu));
-            hideTimeouts.delete(mobileMenu);
-        }
-
-        if (currentSlideData.actions) {
-            mobileMenu.classList.remove('hidden'); // Ensure it's displayed for transition
-            setTimeout(() => { // Allow display change to register before opacity transition starts
-                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
-            }, 10);
-        } else {
-            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-            // Schedule 'hidden' to be added AFTER the fade-out transition completes
-            const timeoutId = setTimeout(() => {
-                mobileMenu.classList.add('hidden');
-            }, 300); // Match CSS transition duration
-            hideTimeouts.set(mobileMenu, timeoutId);
+            // Check if we are on the last slide and if it has actions defined.
+        const isLastSlideWithActions = currentSlide === slides.length - 1 && slides[currentSlide].actions;
+    
+        // If it's the last slide, request the menu to be opened.
+        // This no longer uses the global 'window' object.
+        if (isLastSlideWithActions) {
+            setMenuState(true);
         }
         
         updateArrowButtons();
