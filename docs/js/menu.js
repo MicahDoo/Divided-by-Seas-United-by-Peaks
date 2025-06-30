@@ -1,37 +1,37 @@
 // docs/js/menu.js
 
 /**
- * Controls the visibility of the mobile menu.
+ * The function that other modules can import to control the menu.
  * @param {boolean} shouldBeOpen - True to open the menu, false to close it.
  */
 export function setMenuState(shouldBeOpen) {
     const mobileMenu = document.getElementById('mobile-menu');
-    if (!mobileMenu) return;
+    if (!mobileMenu) return; // Failsafe
 
     if (shouldBeOpen) {
         mobileMenu.classList.remove('hidden');
-        setTimeout(() => {
-            mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
-        }, 10);
+        setTimeout(() => mobileMenu.classList.remove('opacity-0', 'pointer-events-none'), 10);
     } else {
         mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-        setTimeout(() => {
-            mobileMenu.classList.add('hidden');
-        }, 300);
+        setTimeout(() => mobileMenu.classList.add('hidden'), 300);
     }
 }
 
 /**
- * Initializes the hamburger menu button listener.
+ * A private function within this module to set up the button click.
  */
-export function initMenu() {
+function initializeMenuButtonListener() {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
 
     if (mobileMenuButton && mobileMenu) {
         mobileMenuButton.addEventListener('click', () => {
             const isHidden = mobileMenu.classList.contains('hidden');
-            setMenuState(isHidden);
+            setMenuState(isHidden); // Toggles the menu state on click
         });
     }
 }
+
+// This line makes the module self-initializing.
+// It waits for the page to be fully loaded, then runs the setup function.
+document.addEventListener('DOMContentLoaded', initializeMenuButtonListener);
