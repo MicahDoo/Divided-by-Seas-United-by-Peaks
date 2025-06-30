@@ -724,6 +724,8 @@
                 
                 // Set initial page
                 navigation.switchPage('journey');
+                courseManager.renderCourses();
+                courseManager.updateCalculator();
                 
                 console.log('Application initialized successfully');
             } catch (error) {
