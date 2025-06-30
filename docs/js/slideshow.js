@@ -3,6 +3,7 @@ export function initSlideshow(slides, switchPage) {
     const slideshowContainer = document.getElementById('slideshow');
     const prevButton = document.getElementById('prev-slide');
     const nextButton = document.getElementById('next-slide');
+    const mobileMenu = document.getElementById('mobile-menu'); // Get mobile menu element
 
     function renderSlides() {
         slideshowContainer.innerHTML = '';
@@ -29,24 +30,36 @@ export function initSlideshow(slides, switchPage) {
 
         const currentSlideData = slides[currentSlide];
 
-        document.querySelectorAll('.action-button').forEach(btn => btn.classList.add('hidden'));
-        document.getElementById('mobile-menu').classList.add('hidden');
+        // Handle action buttons
+        document.querySelectorAll('.action-button').forEach(btn => {
+            const actionId = btn.id.replace('-mobile', ''); // Normalize ID
+            const shouldShow = currentSlideData.actions && currentSlideData.actions.some(action => action.id === actionId);
+            
+            if (shouldShow) {
+                btn.classList.remove('hidden'); // Make it display block/flex
+                setTimeout(() => { // Allow display change to render before opacity
+                    btn.classList.remove('opacity-0', 'pointer-events-none');
+                }, 10);
+            } else {
+                btn.classList.add('opacity-0', 'pointer-events-none');
+                // Add 'hidden' after transition completes to reclaim space
+                setTimeout(() => {
+                    btn.classList.add('hidden');
+                }, 300); // Match CSS transition duration (0.3s)
+            }
+        });
 
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-
+        // Handle mobile menu visibility
         if (currentSlideData.actions) {
-            currentSlideData.actions.forEach(action => {
-                const actionBtn = document.getElementById(action.id);
-                if (actionBtn) {
-                    actionBtn.classList.remove('hidden');
-                }
-                const actionBtnMobile = document.getElementById(action.id + "-mobile");
-                if (actionBtnMobile) {
-                    actionBtnMobile.classList.remove('hidden');
-                }
-            });
-            mobileMenu.classList.remove('hidden');
+            mobileMenu.classList.remove('hidden'); // Make it display block/flex
+            setTimeout(() => { // Allow display change to render before opacity
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+            }, 10);
+        } else {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300); // Match CSS transition duration (0.3s)
         }
         
         updateArrowButtons();
@@ -58,7 +71,7 @@ export function initSlideshow(slides, switchPage) {
     }
 
     nextButton.addEventListener('click', (e) => {
-        // e.preventDefault();
+        // e.preventDefault(); // This was commented out in original, keeping it.
         if (currentSlide < slides.length - 1) {
             currentSlide++;
             updateUI();
@@ -67,7 +80,7 @@ export function initSlideshow(slides, switchPage) {
     });
 
     prevButton.addEventListener('click', (e) => {
-        // e.preventDefault();
+        // e.preventDefault(); // This was commented out in original, keeping it.
         if (currentSlide > 0) {
             currentSlide--;
             updateUI();
