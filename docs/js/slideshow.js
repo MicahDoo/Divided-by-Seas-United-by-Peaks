@@ -68,7 +68,9 @@ export function initSlideshow(slides, switchPage) {
         // If it's the last slide, request the menu to be opened.
         // This no longer uses the global 'window' object.
         if (isLastSlideWithActions) {
-            openMenuForActions(); // Use the new, more specific function
+            if (mobileMenu.classList.contains("hidden")){
+                openMenuForActions(); // Use the new, more specific function
+            }
         }
         
         updateArrowButtons();
