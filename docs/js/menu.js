@@ -14,7 +14,7 @@ function setMenuState(shouldBeOpen) {
     if (shouldBeOpen) {
         mobileMenu.classList.remove('hidden');
         if(mobileMenu.classList.contains('hidden') == false)){
-            console.log(`[Menu State] Menu state set to OPEN`);
+            console.log(`[Menu State] Menu state set to OPEN Successfully`);
         }
         // setTimeout(() => mobileMenu.classList.remove('opacity-0', 'pointer-events-none'), 10);
         console.log(`[Menu State] Menu state set to OPEN`);
