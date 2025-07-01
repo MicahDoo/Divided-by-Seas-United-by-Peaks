@@ -17,7 +17,7 @@ function setMenuState(shouldBeOpen) {
         console.log(`[Menu State] Menu state set to OPEN`);
     } else {
         mobileMenu.classList.add('hidden');
-        setTimeout(() => mobileMenu.classList.add('opacity-0', 'pointer-events-none');, 300);
+        setTimeout(() => mobileMenu.classList.add('opacity-0', 'pointer-events-none'), 300);
         console.log(`[Menu State] Menu state set to CLOSE`);
     }
 }
