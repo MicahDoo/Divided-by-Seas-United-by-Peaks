@@ -68,8 +68,13 @@ body.plan-active {
     transition: transform 0.3s ease-in-out;
     transform: translateY(100%);
     z-index: 51;
+    pointer-events: none; /* Hidden by default */
 }
-.compare-tray.show { transform: translateY(0); }
+
+.compare-tray.show { 
+    transform: translateY(0); 
+    pointer-events: auto; /* Enable when visible */
+}
 .btn-compare.added { background-color: #27ae60; color: white; }
 .btn-compare.added:hover { background-color: #2ecc71; }
 .btn-compare.full { background-color: #7f8c8d; cursor: not-allowed; }
