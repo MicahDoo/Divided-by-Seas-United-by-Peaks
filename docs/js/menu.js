@@ -33,6 +33,7 @@ function initializeMenuButtonListener() {
     if (mobileMenuButton && mobileMenu) {
         mobileMenuButton.addEventListener('click', () => {
             const isHidden = mobileMenu.classList.contains('hidden');
+            console.log('Menu is clicked. Menu hidden state was: ' + isHidden);
             setMenuState(isHidden);
         });
     }
