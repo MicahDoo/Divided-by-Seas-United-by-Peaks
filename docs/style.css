@@ -67,7 +67,7 @@ body.plan-active {
     right: 0;
     transition: transform 0.3s ease-in-out;
     transform: translateY(100%);
-    z-index: 51;
+    z-index: 100;
     pointer-events: none; /* Hidden by default */
 }
 
