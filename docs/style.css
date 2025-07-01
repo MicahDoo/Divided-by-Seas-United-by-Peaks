@@ -59,7 +59,7 @@ body.plan-active {
 .chart-container { position: relative; margin: auto; height: 40vh; width: 100%; max-width: 800px; max-height: 400px; }
 .tab.active { border-color: #A0522D; background-color: #F8F9FA; color: #A0522D; }
 .toast-notification { transition: opacity 0.3s ease-in-out; pointer-events: none;}
-.modal-overlay { transition: opacity 0.3s ease-in-out; pointer-events: none;}
+.modal-overlay { transition: opacity 0.3s ease-in-out; }
 .modal-content { transition: transform 0.3s ease-in-out; }
 .compare-tray {
     position: fixed;
@@ -70,10 +70,8 @@ body.plan-active {
     transform: translateY(100%);
     z-index: 100;
 }
-
 .compare-tray.show { 
     transform: translateY(0); 
-    pointer-events: auto; /* Enable when visible */
 }
 .btn-compare.added { background-color: #27ae60; color: white; }
 .btn-compare.added:hover { background-color: #2ecc71; }
