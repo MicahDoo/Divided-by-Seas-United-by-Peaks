@@ -211,10 +211,15 @@
         // 1. IMPORT your new modules at the top.
         import slidesData from './js/slideshow-data.js';
         import { initSlideshow } from './js/slideshow.js';
+        import { GPXProgressTracker } from './js/gpx-tracker.js';
+        const gpxTracker = new GPXProgressTracker();
         import './js/menu.js';
 
         // 2. All of your original JavaScript code now lives inside this single DOMContentLoaded listener.
         document.addEventListener('DOMContentLoaded', () => {
+
+            gpxTracker.init();
+            
             const courses = [
                 { id: 1, school: 'Compagnie des Guides', name: 'Beginner Course (3-Day)', location: 'Chamonix, France', region: 'europe', duration: 3, price: 630, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, regular sports activity.', curriculum: ['Rock climbing basics', 'Knot tying', 'Belaying', 'Rappelling', 'Glacier travel', 'Crampon/Ice axe use'], inclusions: ['Guide fees', 'Group safety gear'], exclusions: ['Accommodation', 'Lifts', 'Food', 'Personal gear', 'Insurance'] },
                 { id: 2, school: 'Compagnie des Guides', name: 'Beginner Course (5-Day)', location: 'Chamonix, France', region: 'europe', duration: 5, price: 1145, currency: 'EUR', style: 'all-round', ratio: '1:4', fitness: 'Good general fitness, comfortable with multi-hour hikes.', curriculum: ['All 3-day skills', 'Crevasse rescue basics', 'Multi-pitch climbing intro', 'Night in a mountain hut'], inclusions: ['Guide fees', 'Group safety gear', 'Hut half-board'], exclusions: ['Valley accommodation', 'Lifts', 'Food (lunches)', 'Personal gear', 'Insurance'] },
@@ -502,84 +507,6 @@
                     // mobileMenu.classList.add('hidden'); // Close mobile menu when nav item clicked
                 });
             });
-
-            // New Effects
-            const gpxPath = document.getElementById('gpx-path-progress');
-            const gpxLabelsContainer = document.getElementById('gpx-labels');
-            const pathLength = gpxPath.getTotalLength();
-            gpxPath.style.strokeDasharray = pathLength;
-            gpxPath.style.strokeDashoffset = pathLength;
-            
-            const labelData = [
-                { id: 'home-plan', text: '🚶‍♂️', xPercent: 0.04, class: 'text-lg', progress: 0 },
-                { id: 'foundations', text: 'Foundations', xPercent: 0.208, class: 'text-xs font-bold', progress: 0.18 },
-                { id: 'courses', text: 'Courses', xPercent: 0.5, class: 'text-xs font-bold', progress: 0.50 },
-                { id: 'online', text: 'Online Prep', xPercent: 0.66, class: 'text-xs font-bold', progress: 0.70},
-                { id: 'budget', text: 'Budget', xPercent: 0.83, class: 'text-xs font-bold', progress: 0.82 },
-                { id: 'finish', text: '🏔️', xPercent: 0.96, class: 'text-lg', progress: 1.0 }
-            ];
-
-            const path = document.getElementById('gpx-path-base');
-            const svgWidth = 1200;
-            labelData.forEach(data => {
-                const label = document.createElement('a');
-                label.href = `#${data.id}`;
-                label.id = `label-${data.id}`;
-                label.className = `gpx-label hidden md:block ${data.class}`;
-                label.textContent = data.text;
-                
-                const point = path.getPointAtLength(data.xPercent * pathLength);
-                label.style.left = `${(point.x / svgWidth) * 100}%`;
-                label.dataset.pos = data.progress;
-
-                gpxLabelsContainer.appendChild(label);
-            });
-            const gpxLabels = document.querySelectorAll('.gpx-label');
-            
-            let currentProgress = 0;
-            let targetProgress = 0;
-            
-            function animateProgress() {
-                if (Math.abs(currentProgress - targetProgress) < 0.001) return;
-            
-                // Smooth interpolation (lerp)
-                currentProgress += (targetProgress - currentProgress) * 0.15;
-            
-                const drawLength = pathLength * currentProgress;
-                gpxPath.style.strokeDashoffset = pathLength - drawLength;
-            
-                gpxLabels.forEach(label => {
-                    label.classList.toggle('gpx-label-active', currentProgress >= parseFloat(label.dataset.pos));
-                });
-            
-                requestAnimationFrame(animateProgress);
-            }
-            
-            window.addEventListener('scroll', () => {
-                if (document.getElementById('plan-page').classList.contains('hidden')) return;
-            
-                let currentSection = 'home-plan';
-                const scrollPosition = window.pageYOffset;
-            
-                document.querySelectorAll('#plan-page main section[id]').forEach(section => {
-                    if (scrollPosition >= section.offsetTop - 120) {
-                        currentSection = section.id;
-                    }
-                });
-            
-                let newProgress = labelData.find(l => l.id === currentSection)?.progress || 0;
-            
-                const totalScrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-                if (scrollPosition + window.innerHeight >= document.body.scrollHeight - 2) {
-                    newProgress = 1.0;
-                }
-            
-                if (Math.abs(newProgress - targetProgress) > 0.001) {
-                    targetProgress = newProgress;
-                    requestAnimationFrame(animateProgress);
-                }
-            });
-
 
             // 3. INITIALIZE your new modules here.
             // Pass the imported data and the necessary functions (like switchPage) to them.
